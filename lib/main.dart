@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:library_online_application/widgets/statefull/bookcase_screen.dart';
-import 'package:library_online_application/widgets/statefull/flaskcard_screen.dart';
-import 'package:library_online_application/widgets/statefull/library_screen.dart';
-import 'package:library_online_application/widgets/statefull/pomodoro_screen.dart';
-import 'package:library_online_application/widgets/statefull/reading_space_screen.dart';
+import 'package:library_online_application/screens/app_intro_screen.dart';
+import 'package:library_online_application/screens/bookcase_screen.dart';
+import 'package:library_online_application/screens/flaskcard_screen.dart';
+import 'package:library_online_application/screens/library_screen.dart';
+import 'package:library_online_application/screens/pomodoro_screen.dart';
+import 'package:library_online_application/screens/reading_space_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "Poppins"),
-      home: const MyHomePage(),
+      // home: const MyHomePage(),
+      home: const AppIntro(),
     );
   }
 }

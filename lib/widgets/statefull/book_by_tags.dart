@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:library_online_application/widgets/statefull/book_detail.dart';
 
 class BookByTags extends StatefulWidget {
   const BookByTags({Key? key}) : super(key: key);
@@ -197,12 +198,20 @@ class _BookByTagsState extends State<BookByTags> {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            "Toi Thay Hoa Vang Tren Co Xanh",
-            style: TextStyle(
-                color: Color(0xFF6D6D6D),
-                fontSize: 14,
-                fontWeight: FontWeight.w600),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BookDetail()),
+              );
+            },
+            child: const Text(
+              "Toi Thay Hoa Vang Tren Co Xanh",
+              style: TextStyle(
+                  color: Color(0xFF6D6D6D),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
+            ),
           ),
           const Text(
             "Nguyen Nhat Anh",

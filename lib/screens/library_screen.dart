@@ -41,9 +41,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(30)),
                       child: Image.network(
-                        "https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/240581367_3138938299764392_2228439304544764616_n.jpg?_nc_cat=101&ccb=1-5&_nc_sid=174925&_nc_ohc=4RAL07PQdggAX-kSYxz&_nc_ht=scontent.fsgn4-1.fna&oh=00_AT9CKVXKKfs6arSnyrqubgNC2mHepqtnA-dLE9uSgcDL5Q&oe=6265842D",
+                        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?cs=srgb&dl=pexels-creation-hill-1681010.jpg&fm=jpg",
                         width: 34,
                         height: 34,
+                        fit: BoxFit.cover,
                       ),
                     )
                   ],
