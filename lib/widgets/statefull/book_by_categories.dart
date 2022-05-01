@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/api/categories_api.dart';
+import 'package:library_online_application/models/category.dart';
+import 'package:library_online_application/models/tag.dart';
 import 'package:library_online_application/widgets/statefull/book_by_tags.dart';
 import 'package:library_online_application/widgets/statefull/tags_by_categories.dart';
 
@@ -10,16 +13,26 @@ class BookByCategories extends StatefulWidget {
 }
 
 class _BookByCategoriesState extends State<BookByCategories> {
-  final List categories = [
-    "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FlifeStyle.png?alt=media&token=4a8feb3e-4ee2-4989-8a9c-b8ac21dc42fc",
-    "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FdevCode.png?alt=media&token=a5257209-2a6c-41e5-b7b6-49a50aca34f5",
-    "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FscienceSpace.png?alt=media&token=63681758-8348-41cc-b7e4-99edd5d01ccb",
-  ];
+  List<Category> categories = [];
 
   final List _listTagsByCategories = [
     "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FlifeStyleBook.png?alt=media&token=5eb3d9a2-4eb3-42fc-a529-b3c2e735a7f9",
     "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FcodeDevBook.png?alt=media&token=c33b7633-da63-4bf7-b4ae-9a86f6943171"
   ];
+
+  Future<void> getData() async {
+    List<Category> listCategories = await CategoryApi.getCategories();
+    setState(() {
+      categories = listCategories;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +41,7 @@ class _BookByCategoriesState extends State<BookByCategories> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -41,26 +54,30 @@ class _BookByCategoriesState extends State<BookByCategories> {
                   color: Color.fromRGBO(109, 109, 109, 1)),
             ),
           ),
-          Container(
+          SizedBox(
             width: double.infinity,
             height: 140,
-            child: ListView(
+            child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              children: categories
-                  .map((e) => Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Image.network(e),
-                      ))
-                  .toList(),
+              itemCount: categories.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Image.network(categories[index].thumbnail.toString()),
+                );
+              },
             ),
           ),
           Column(
-            children: _listTagsByCategories
+            children: categories
                 .asMap()
                 .entries
-                .map((e) =>
-                    TagsByCategories(index: e.key, imageThumbnail: e.value))
+                .map((e) => TagsByCategories(
+                    category: e.value,
+                    index: e.key,
+                    imageThumbnail: _listTagsByCategories[0],
+                    tags: e.value.tags))
                 .toList(),
           )
         ],

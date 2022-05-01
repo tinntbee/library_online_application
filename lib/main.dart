@@ -5,6 +5,7 @@ import 'package:library_online_application/screens/flaskcard_screen.dart';
 import 'package:library_online_application/screens/library_screen.dart';
 import 'package:library_online_application/screens/pomodoro_screen.dart';
 import 'package:library_online_application/screens/reading_space_screen.dart';
+import 'package:library_online_application/utils/authentication.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
+ 
 class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _screens = <Widget>[
     LibraryScreen(),

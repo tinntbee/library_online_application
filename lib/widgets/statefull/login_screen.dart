@@ -1,27 +1,20 @@
-import 'dart:convert';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:library_online_application/clippers/book_mark_clipper.dart';
 import 'package:library_online_application/main.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:library_online_application/models/app_user.dart';
+import 'package:library_online_application/utils/authentication.dart';
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Optional clientId
-  // clientId: '479882132969-9i9aqik3jfjd7qhci1nqf0bm2g71rm1u.apps.googleusercontent.com',
-  scopes: <String>[
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
-);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
-class Login extends StatelessWidget {
-  Login({Key? key}) : super(key: key);
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   bool _isSigningIn = false;
-
-  
-
   @override
   Widget build(BuildContext context) {
     bool visible = true;
@@ -257,52 +250,88 @@ class Login extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
-                                        child: Container(
-                                      decoration: const BoxDecoration(
-                                          gradient: LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF4566),
-                                                Color(0xFFC22460),
-                                              ],
-                                              begin: FractionalOffset(1.0, 0.0),
-                                              end: FractionalOffset(0.0, 0.0),
-                                              stops: [0.0, 1.0],
-                                              tileMode: TileMode.clamp),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                          }, // Handle your onTap
-                                          child: Ink(
+                                    FutureBuilder(
+                                      future: Authentication.initializeFirebase(
+                                          context: context),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                              'Error initializing Firebase');
+                                        } else if (snapshot.connectionState ==
+                                            ConnectionState.done) {}
+                                        return Expanded(
                                             child: Container(
-                                              padding: EdgeInsets.all(8),
-                                              height: 35,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text(
-                                                    "Google",
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white),
+                                          decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  colors: [
+                                                    Color(0xFFFF4566),
+                                                    Color(0xFFC22460),
+                                                  ],
+                                                  begin: FractionalOffset(
+                                                      1.0, 0.0),
+                                                  end: FractionalOffset(
+                                                      0.0, 0.0),
+                                                  stops: [0.0, 1.0],
+                                                  tileMode: TileMode.clamp),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          clipBehavior: Clip.hardEdge,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                setState(() {
+                                                  _isSigningIn = true;
+                                                });
+
+                                                AppUser? user =
+                                                    await Authentication
+                                                        .signInWithGoogle(
+                                                            context: context);
+
+                                                setState(() {
+                                                  _isSigningIn = false;
+                                                });
+
+                                                if (user != null) {
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MyHomePage(),
+                                                    ),
+                                                  );
+                                                }
+                                              }, // Handle your onTap
+                                              child: Ink(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(8),
+                                                  height: 35,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      const Text(
+                                                        "Google",
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      Image.asset(
+                                                          'assets/images/png/google_logo.png')
+                                                    ],
                                                   ),
-                                                  Image.asset(
-                                                      'assets/images/png/google_logo.png')
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    )),
+                                        ));
+                                      },
+                                    ),
                                     const SizedBox(
                                       width: 15,
                                     ),

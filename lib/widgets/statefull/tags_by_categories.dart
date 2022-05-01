@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/models/category.dart';
+import 'package:library_online_application/models/tag.dart';
 import 'package:library_online_application/widgets/statefull/book_by_tags.dart';
 
 class TagsByCategories extends StatelessWidget {
   final String imageThumbnail;
   final int index;
-  const TagsByCategories(
-      {Key? key, required this.index, required this.imageThumbnail})
-      : super(key: key);
+  final List<Tag>? tags;
+  final Category category;
+  const TagsByCategories({
+    Key? key,
+    required this.index,
+    required this.imageThumbnail,
+    required this.tags,
+    required this.category,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,23 +45,23 @@ class TagsByCategories extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.only(right: 80),
+                          padding: const EdgeInsets.only(right: 80),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
-                            children: const [
+                            children: [
                               Text(
-                                "LIFE STYLE",
+                                category.name ?? "-",
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: Color.fromRGBO(37, 143, 90, 1)),
                               ),
                               Text(
-                                "it must remain in the vine. Neither can you bear fruit unless you remain in me",
+                                category.quote ?? "-",
                                 maxLines: 3,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     height: 1.3,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
@@ -63,7 +71,11 @@ class TagsByCategories extends StatelessWidget {
                           ),
                         ),
                         Column(
-                          children: [1, 2].map((e) => BookByTags()).toList(),
+                          children: tags!
+                              .map((e) => BookByTags(
+                                    tag: e,
+                                  ))
+                              .toList(),
                         )
                       ],
                     )),
@@ -99,20 +111,20 @@ class TagsByCategories extends StatelessWidget {
                           padding: EdgeInsets.only(left: 80),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                "LIFE STYLE",
+                                category.name ?? "-",
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: Color.fromRGBO(37, 143, 90, 1)),
                               ),
                               Text(
-                                "it must remain in the vine. Neither can you bear fruit unless you remain in me",
+                                category.quote ?? "-",
                                 maxLines: 3,
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     height: 1.3,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
@@ -122,7 +134,11 @@ class TagsByCategories extends StatelessWidget {
                           ),
                         ),
                         Column(
-                          children: [1, 2].map((e) => BookByTags()).toList(),
+                          children: tags!
+                              .map((e) => BookByTags(
+                                    tag: e,
+                                  ))
+                              .toList(),
                         )
                       ],
                     )),
