@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/models/book.dart';
 
 class BookTrendingItem extends StatelessWidget {
   final int? index;
-  const BookTrendingItem({Key? key, required this.index}) : super(key: key);
+  final Book book;
+  const BookTrendingItem({Key? key, required this.index, required this.book})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class BookTrendingItem extends StatelessWidget {
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Image.network(
-                    "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fimages%2FEloquent%20JavaScript-ver1642092283234?alt=media&token=fe49a054-f7b8-41bd-8833-744716f270c5",
+                    book.image ?? "-",
                     width: 55,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -68,18 +71,18 @@ class BookTrendingItem extends StatelessWidget {
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          "Co Hai Con Meo Ngoi Ben Cua So",
+                          book.name,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(109, 109, 109, 1)),
                         ),
                         Text(
-                          "Nguyen Nhat Anh",
-                          style: TextStyle(
+                          book.author ?? "No Author",
+                          style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w300,
                               color: Color.fromRGBO(164, 164, 164, 1)),
@@ -93,31 +96,44 @@ class BookTrendingItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Column(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.thumb_up,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
-                                  Text(
-                                    "87%",
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(2, 123, 118, 1),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  )
+                                  Builder(builder: (BuildContext context) {
+                                    double perLike = book.totalLike! *
+                                        100 /
+                                        (book.totalLike! + book.totalDislike!);
+                                    String perLikeToString = "";
+                                    if (perLike.isNaN) {
+                                      perLikeToString = "-";
+                                    } else {
+                                      perLikeToString =
+                                          perLike.ceil().toString() + "%";
+                                    }
+
+                                    return Text(
+                                      perLikeToString,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(2, 123, 118, 1),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    );
+                                  }),
                                 ],
                               ),
                               Column(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.shopping_cart,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
                                   Text(
-                                    "1.3k",
-                                    style: TextStyle(
+                                    (book.totalRead ?? 0).toString(),
+                                    style: const TextStyle(
                                         color: Color.fromRGBO(2, 123, 118, 1),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400),
@@ -125,15 +141,15 @@ class BookTrendingItem extends StatelessWidget {
                                 ],
                               ),
                               Column(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.comment_rounded,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
                                   Text(
-                                    "2.3k",
-                                    style: TextStyle(
+                                    (book.totalComment ?? 0).toString(),
+                                    style: const TextStyle(
                                         color: Color.fromRGBO(2, 123, 118, 1),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400),

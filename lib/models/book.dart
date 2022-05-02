@@ -24,8 +24,7 @@ class Book {
   int? totalPage;
   int? totalLike;
   int? totalDislike;
-  List<AppUser>? disliked;
-  List<AppUser>? liked;
+  int? totalComment;
   int? totalRead;
 
   Book({
@@ -47,8 +46,7 @@ class Book {
     this.totalPage,
     this.totalLike,
     this.totalDislike,
-    this.disliked,
-    this.liked,
+    this.totalComment,
     this.totalRead,
   });
 
@@ -71,8 +69,7 @@ class Book {
     int? totalPage,
     int? totalLike,
     int? totalDislike,
-    List<AppUser>? disliked,
-    List<AppUser>? liked,
+    int? totalComment,
     int? totalRead,
   }) {
     return Book(
@@ -94,8 +91,7 @@ class Book {
       totalPage: totalPage ?? this.totalPage,
       totalLike: totalLike ?? this.totalLike,
       totalDislike: totalDislike ?? this.totalDislike,
-      disliked: disliked ?? this.disliked,
-      liked: liked ?? this.liked,
+      totalComment: totalComment ?? this.totalComment,
       totalRead: totalRead ?? this.totalRead,
     );
   }
@@ -120,8 +116,7 @@ class Book {
       'totalPage': totalPage,
       'totalLike': totalLike,
       'totalDislike': totalDislike,
-      'disliked': disliked?.map((x) => x.toMap()).toList(),
-      'liked': liked?.map((x) => x.toMap()).toList(),
+      'totalComment': totalComment,
       'totalRead': totalRead,
     };
   }
@@ -133,16 +128,24 @@ class Book {
       namenosign: map['namenosign'] as String?,
       author: map['author'] as String?,
       authorNoSign: map['authorNoSign'] as String?,
-      tags: List<Tag>.from(
-        (map['tags'] as List<dynamic>).map<Tag>(
-          (x) => Tag.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      tags: map['tags'] != null
+          ? List<Tag>.from(
+              (map['tags'] as List<dynamic>).map<Tag?>(
+                (x) {
+                  if (x is String) {
+                    return Tag.fromMap(
+                        jsonDecode('{"_id": "${x}"}') as Map<String, dynamic>);
+                  }
+                  return Tag.fromMap(x as Map<String, dynamic>);
+                },
+              ),
+            )
+          : <Tag>[],
       description: map['description'] as String?,
       descriptionNoSign: map['descriptionNoSign'] as String?,
       image: map['image'] as String?,
       is_active: map['is_active'] as int?,
-      quote: map['quote'][0] as String?,
+      quote: map['quote'] != null ? map['quote'][0] as String? : "-",
       price: map['price'] as int?,
       link: map['link'] as String?,
       linkIntro: map['linkIntro'] as String?,
@@ -150,6 +153,7 @@ class Book {
       totalPage: map['totalPage'] as int?,
       totalLike: map['totalLike'] as int?,
       totalDislike: map['totalDislike'] as int?,
+      totalComment: map['totalComment'] as int?,
       totalRead: map['totalRead'] as int?,
     );
   }
@@ -160,7 +164,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, name: $name, namenosign: $namenosign, author: $author, authorNoSign: $authorNoSign, tags: $tags, description: $description, descriptionNoSign: $descriptionNoSign, image: $image, is_active: $is_active, quote: $quote, price: $price, link: $link, linkIntro: $linkIntro, key: $key, totalPage: $totalPage, totalLike: $totalLike, totalDislike: $totalDislike, disliked: $disliked, liked: $liked, totalRead: $totalRead)';
+    return 'Book(id: $id, name: $name, namenosign: $namenosign, author: $author, authorNoSign: $authorNoSign, tags: $tags, description: $description, descriptionNoSign: $descriptionNoSign, image: $image, is_active: $is_active, quote: $quote, price: $price, link: $link, linkIntro: $linkIntro, key: $key, totalPage: $totalPage, totalLike: $totalLike, totalDislike: $totalDislike, totalComment: $totalComment, totalRead: $totalRead)';
   }
 
   @override
@@ -186,8 +190,7 @@ class Book {
         other.totalPage == totalPage &&
         other.totalLike == totalLike &&
         other.totalDislike == totalDislike &&
-        listEquals(other.disliked, disliked) &&
-        listEquals(other.liked, liked) &&
+        other.totalComment == totalComment &&
         other.totalRead == totalRead;
   }
 
@@ -211,8 +214,7 @@ class Book {
         totalPage.hashCode ^
         totalLike.hashCode ^
         totalDislike.hashCode ^
-        disliked.hashCode ^
-        liked.hashCode ^
+        totalComment.hashCode ^
         totalRead.hashCode;
   }
 }

@@ -45,7 +45,6 @@ class _BookByTagsState extends State<BookByTags> {
 
   @override
   Widget build(BuildContext context) {
-    print("tagid ${widget.tag?.id} : " + books.toString());
     return books.isNotEmpty
         ? SizedBox(
             width: double.infinity,

@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:library_online_application/api/book_api.dart';
+import 'package:library_online_application/models/book.dart';
 import 'package:library_online_application/widgets/stateless/book_trending_item.dart';
 
 class BookTrending extends StatefulWidget {
@@ -11,6 +13,21 @@ class BookTrending extends StatefulWidget {
 }
 
 class _BookTrendingState extends State<BookTrending> {
+  List<Book> books = [];
+  Future<void> getBooksTrending() async {
+    List<Book> listBooks = await BookApi.getBooksTrending();
+    setState(() {
+      books = listBooks;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getBooksTrending();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,12 +80,10 @@ class _BookTrendingState extends State<BookTrending> {
             ),
             child: ListView(
               physics: const BouncingScrollPhysics(),
-              children: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              children: books
                   .asMap()
                   .entries
-                  .map((e) => BookTrendingItem(
-                        index: e.key + 1,
-                      ))
+                  .map((e) => BookTrendingItem(index: e.key + 1, book: e.value))
                   .toList(),
             ),
           ))
