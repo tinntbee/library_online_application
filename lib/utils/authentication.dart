@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:library_online_application/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:library_online_application/models/app_user.dart';
+import 'package:library_online_application/widgets/statefull/login_screen.dart';
 
 class Authentication {
   static String? idToken;
@@ -110,6 +111,13 @@ class Authentication {
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
+      idToken = "";
+      appUser = null;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         Authentication.customSnackBar(
