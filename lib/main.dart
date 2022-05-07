@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:library_online_application/screens/app_intro_screen.dart';
-import 'package:library_online_application/screens/bookcase_screen.dart';
-import 'package:library_online_application/screens/flaskcard_screen.dart';
-import 'package:library_online_application/screens/library_screen.dart';
-import 'package:library_online_application/screens/pomodoro_screen.dart';
-import 'package:library_online_application/screens/reading_space_screen.dart';
+import 'package:library_online_application/screens/app-intro/app_intro_screen.dart';
+import 'package:library_online_application/screens/bookcase/bookcase_screen.dart';
+import 'package:library_online_application/screens/flaskcard/flaskcard_screen.dart';
+import 'package:library_online_application/screens/library/library_screen.dart';
+import 'package:library_online_application/screens/pomodoro/pomodoro_screen.dart';
+import 'package:library_online_application/screens/reading-space/reading_space_screen.dart';
 import 'package:library_online_application/utils/authentication.dart';
 
 void main() {
@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
- 
+
 class _MyHomePageState extends State<MyHomePage> {
   static const List<Widget> _screens = <Widget>[
     LibraryScreen(),

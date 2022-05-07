@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:library_online_application/api/categories_api.dart';
 import 'package:library_online_application/models/category.dart';
 import 'package:library_online_application/models/tag.dart';
-import 'package:library_online_application/widgets/statefull/book_by_tags.dart';
-import 'package:library_online_application/widgets/statefull/tags_by_categories.dart';
+import 'package:library_online_application/screens/library/widgets/book_by_tags.dart';
+import 'package:library_online_application/screens/library/widgets/tags_by_categories.dart';
 
 class BookByCategories extends StatefulWidget {
   const BookByCategories({Key? key}) : super(key: key);

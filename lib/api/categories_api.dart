@@ -7,7 +7,7 @@ class CategoryApi {
   static Future<List<Category>> getCategories() async {
     List<Category> categories = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.9:2005/categories'),
+      Uri.parse('http://192.168.1.6:2005/categories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

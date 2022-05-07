@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:library_online_application/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:library_online_application/models/app_user.dart';
-import 'package:library_online_application/widgets/statefull/login_screen.dart';
+import 'package:library_online_application/screens/login/login_screen.dart';
 
 class Authentication {
   static String? idToken;
@@ -130,7 +130,7 @@ class Authentication {
   static Future<AppUser> fetchSign(String idToken) async {
     AppUser? appUser;
     final response = await http.post(
-      Uri.parse('http://192.168.1.9:2005/accounts/login-google'),
+      Uri.parse('http://192.168.1.6:2005/accounts/login-google'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

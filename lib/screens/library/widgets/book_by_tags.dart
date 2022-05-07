@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:library_online_application/api/book_api.dart';
 import 'package:library_online_application/models/book.dart';
 import 'package:library_online_application/models/tag.dart';
-import 'package:library_online_application/widgets/statefull/book_detail.dart';
+import 'package:library_online_application/screens/book-detail/book_detail.dart';
 
 class BookByTags extends StatefulWidget {
   final Tag? tag;

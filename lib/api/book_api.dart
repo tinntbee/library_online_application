@@ -7,7 +7,7 @@ class BookApi {
   static Future<List<Book>> getBookByTag(String? tagId) async {
     List<Book> books = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.9:2005/books/bookByTag/' + tagId!),
+      Uri.parse('http://192.168.1.6:2005/books/bookByTag/' + tagId!),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -29,7 +29,7 @@ class BookApi {
   static Future<List<Book>> getBooksTrending() async {
     List<Book> books = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.9:2005/books/trending/'),
+      Uri.parse('http://192.168.1.6:2005/books/trending/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
