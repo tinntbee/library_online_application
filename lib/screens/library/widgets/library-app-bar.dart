@@ -37,15 +37,7 @@ class _LibraryAppBarState extends State<LibraryAppBar> {
     if (user != null) {
       avatar = user.avatar;
     }
-
-    final List<String> tags = [
-      "Truyen ngan",
-      "Khoa hoc",
-      "Cong nghe",
-      "Tam ly hoc",
-      "Lich su",
-      "Tieu thuyet"
-    ];
+    
     return Container(
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       color: Colors.white,

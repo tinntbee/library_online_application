@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:library_online_application/screens/search-in-library/search_in_library.dart';
 
-class LibrarySearchBar extends StatefulWidget {
-  const LibrarySearchBar({Key? key}) : super(key: key);
+class ResultSearchBar extends StatefulWidget {
+  const ResultSearchBar({Key? key}) : super(key: key);
 
   @override
-  State<LibrarySearchBar> createState() => _LibrarySearchBarState();
+  State<ResultSearchBar> createState() => _ResultSearchBarState();
 }
 
-class _LibrarySearchBarState extends State<LibrarySearchBar> {
+class _ResultSearchBarState extends State<ResultSearchBar> {
   final searchController = TextEditingController();
   bool searchOnFocus = false;
   bool searchIsValued = false;
@@ -71,8 +71,8 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
       floating: true,
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: searchOnFocus ? 155.0 : 55.0,
-          maxHeight: searchOnFocus ? 155.0 : 55.0,
+          minHeight: 155.0,
+          maxHeight: 155.0,
           child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
@@ -149,67 +149,58 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
                       ],
                     ),
                   ),
-                  searchOnFocus
-                      ? Container(
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "# Book Tags",
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF6D6D6D)),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Wrap(
-                                children: tags
-                                    .map((e) => Container(
-                                          margin: const EdgeInsets.all(3),
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(10)),
-                                              color: const Color(0xFF6D6D6D)
-                                                  .withOpacity(0.1)),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap:
-                                                  () async {}, // Handle your onTap
-                                              child: Ink(
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 10),
-                                                  child: Text(
-                                                    e,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color:
-                                                            Color(0xFF6D6D6D)),
-                                                  ),
-                                                ),
-                                              ),
+                  Container(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "# Book Tags",
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF6D6D6D)),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Wrap(
+                          children: tags
+                              .map((e) => Container(
+                                    margin: const EdgeInsets.all(3),
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: const Color(0xFF6D6D6D)
+                                            .withOpacity(0.1)),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () async {}, // Handle your onTap
+                                        child: Ink(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8, horizontal: 10),
+                                            child: Text(
+                                              e,
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Color(0xFF6D6D6D)),
                                             ),
                                           ),
-                                        ))
-                                    .toList(),
-                              )
-                            ],
-                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
                         )
-                      : Container()
+                      ],
+                    ),
+                  )
                 ],
               ))),
     );
