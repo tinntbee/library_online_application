@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:library_online_application/models/book.dart';
 import 'package:http/http.dart' as http;
 
+import 'apis.dart';
+
 class BookApi {
   static Future<List<Book>> getBookByTag(String? tagId) async {
     List<Book> books = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.6:2005/books/bookByTag/' + tagId!),
+      Uri.parse('${Apis.bookBaseUrl}/bookByTag/' + tagId!),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -29,7 +31,7 @@ class BookApi {
   static Future<List<Book>> getBooksTrending() async {
     List<Book> books = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.6:2005/books/trending/'),
+      Uri.parse('${Apis.bookBaseUrl}/trending/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

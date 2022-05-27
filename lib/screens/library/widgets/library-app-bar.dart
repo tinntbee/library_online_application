@@ -21,7 +21,7 @@ class LibraryAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<LibraryAppBar> createState() => _LibraryAppBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(50);
+  Size get preferredSize => const Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +37,13 @@ class _LibraryAppBarState extends State<LibraryAppBar> {
     if (user != null) {
       avatar = user.avatar;
     }
-    
+
     return Container(
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       color: Colors.white,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const SizedBox(
-            height: 30,
-          ),
           Row(
             children: [
               const Icon(

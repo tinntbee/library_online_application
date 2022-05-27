@@ -7,7 +7,8 @@ import 'package:library_online_application/api/categories_api.dart';
 import 'package:library_online_application/models/app_user.dart';
 import 'package:library_online_application/models/category.dart';
 import 'package:library_online_application/screens/library/widgets/library-app-bar.dart';
-import 'package:library_online_application/screens/library/widgets/library-search-bar.dart';
+import 'package:library_online_application/widgets/statefull/library-search-bar.dart';
+import 'package:library_online_application/screens/search-in-library/search_in_library.dart';
 import 'package:library_online_application/utils/authentication.dart';
 import 'package:library_online_application/screens/library/widgets/book_by_categories.dart';
 import 'package:library_online_application/screens/library/widgets/book_for_you.dart';
@@ -26,6 +27,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
     // Future<void> getBook() async {
     //   print(await BookApi.getBookByTag("61b982603cd1052a8febe8fc"));
     // }
+    void handleSearch() {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SearchInLibrary(),
+      ));
+    }
 
     // getBook();
     return Scaffold(
@@ -34,10 +40,19 @@ class _LibraryScreenState extends State<LibraryScreen> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           // persistent header
-          LibrarySearchBar(),
+          LibrarySearchBar(
+            handleSearch: handleSearch,
+          ),
           SliverToBoxAdapter(
             child: Column(
-              children: [BookForYou(), BookTrending(), BookByCategories()],
+              children: [
+                BookForYou(),
+                BookTrending(),
+                BookByCategories(),
+                SizedBox(
+                  height: 80,
+                )
+              ],
             ),
           ),
         ],

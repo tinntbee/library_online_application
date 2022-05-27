@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:library_online_application/screens/search-in-library/search_in_library.dart';
 
-class LibrarySearchBar extends StatefulWidget {
-  const LibrarySearchBar({Key? key}) : super(key: key);
-
+class SearchBar extends StatefulWidget {
+  const SearchBar({Key? key, required this.handleSearch}) : super(key: key);
+  final VoidCallback handleSearch;
   @override
-  State<LibrarySearchBar> createState() => _LibrarySearchBarState();
+  State<SearchBar> createState() => _SearchBarState();
 }
 
-class _LibrarySearchBarState extends State<LibrarySearchBar> {
+class _SearchBarState extends State<SearchBar> {
   final searchController = TextEditingController();
   bool searchOnFocus = false;
   bool searchIsValued = false;
@@ -53,9 +53,7 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
   @override
   Widget build(BuildContext context) {
     void _handleNavigateToSearchScreen(BuildContext context) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SearchInLibrary(),
-      ));
+      widget.handleSearch();
     }
 
     final List<String> tags = [
@@ -71,23 +69,15 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
       floating: true,
       pinned: false,
       delegate: SliverAppBarDelegate(
-          minHeight: searchOnFocus ? 155.0 : 55.0,
-          maxHeight: searchOnFocus ? 155.0 : 55.0,
+          minHeight: 55.0,
+          maxHeight: 55.0,
           child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: EdgeInsets.symmetric(horizontal: 15),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
               ),
               child: Column(
                 children: [
@@ -149,67 +139,6 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
                       ],
                     ),
                   ),
-                  searchOnFocus
-                      ? Container(
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "# Book Tags",
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF6D6D6D)),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Wrap(
-                                children: tags
-                                    .map((e) => Container(
-                                          margin: const EdgeInsets.all(3),
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(10)),
-                                              color: const Color(0xFF6D6D6D)
-                                                  .withOpacity(0.1)),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap:
-                                                  () async {}, // Handle your onTap
-                                              child: Ink(
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 10),
-                                                  child: Text(
-                                                    e,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color:
-                                                            Color(0xFF6D6D6D)),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ))
-                                    .toList(),
-                              )
-                            ],
-                          ),
-                        )
-                      : Container()
                 ],
               ))),
     );
