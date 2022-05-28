@@ -15,3 +15,6 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 # library_online_application
+
+# run flutter project ignore "Error: Cannot run with sound null safety"
+flutter run --no-sound-null-safety

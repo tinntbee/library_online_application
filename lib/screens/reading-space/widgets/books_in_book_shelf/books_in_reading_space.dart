@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:library_online_application/screens/reading-space/widgets/books_reading_in_reading_space.dart';
-import 'package:library_online_application/screens/reading-space/widgets/note_in_reading_space_item.dart';
+import 'package:library_online_application/screens/reading-space/widgets/books_in_book_shelf/note_in_reading_space_item.dart';
 
 class BooksInReadingSpace extends StatefulWidget {
   const BooksInReadingSpace({Key? key}) : super(key: key);
