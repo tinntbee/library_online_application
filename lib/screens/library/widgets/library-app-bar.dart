@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
 
 import '../../../models/app_user.dart';
 import '../../../utils/authentication.dart';
@@ -47,7 +48,8 @@ class _LibraryAppBarState extends State<LibraryAppBar> {
           Row(
             children: [
               const Icon(
-                Icons.dashboard_rounded,
+                BeeAppIcons.menu,
+                size: 20,
                 color: Color.fromRGBO(109, 109, 109, 1),
               ),
               const SizedBox(width: 10),

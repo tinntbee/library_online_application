@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
 
 class BookForYou extends StatefulWidget {
   const BookForYou({Key? key}) : super(key: key);
@@ -117,7 +118,7 @@ class _BookForYouState extends State<BookForYou> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(
-                            Icons.thumb_up,
+                            BeeAppIcons.thumb_up,
                             color: Colors.white,
                             size: 18,
                           ),
@@ -131,7 +132,7 @@ class _BookForYouState extends State<BookForYou> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(
-                            Icons.shopping_cart,
+                            BeeAppIcons.cart,
                             color: Colors.white,
                             size: 18,
                           ),

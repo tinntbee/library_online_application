@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/screens/reading-space/widgets/reading_space/reading_space.dart';
 
 class ReadingBookItem extends StatelessWidget {
   const ReadingBookItem({Key? key, required this.isActive}) : super(key: key);
@@ -24,7 +25,12 @@ class ReadingBookItem extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {}, // Handle your onTap
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReadingSpace()),
+                );
+              }, // Handle your onTap
               child: Ink(
                   child: Container(
                 width: 254,

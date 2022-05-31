@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/screens/app-intro/app_intro_screen.dart';
 import 'package:library_online_application/screens/bookcase/bookcase_screen.dart';
 import 'package:library_online_application/screens/flaskcard/flaskcard_screen.dart';
@@ -40,11 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
     FlaskCardScreen()
   ];
   static const List _icons = [
-    Icons.library_books,
-    Icons.book,
-    Icons.amp_stories_rounded,
-    Icons.favorite,
-    Icons.lightbulb
+    BeeAppIcons.library_icon,
+    BeeAppIcons.book,
+    BeeAppIcons.reading_space,
+    BeeAppIcons.light_bulb,
+    BeeAppIcons.flash_card
   ];
   static const List _tabs = [
     "LIBRARY",

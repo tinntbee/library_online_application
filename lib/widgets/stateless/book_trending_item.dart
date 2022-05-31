@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/models/book.dart';
 
 class BookTrendingItem extends StatelessWidget {
@@ -98,7 +99,7 @@ class BookTrendingItem extends StatelessWidget {
                               Column(
                                 children: [
                                   const Icon(
-                                    Icons.thumb_up,
+                                    BeeAppIcons.thumb_up,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
@@ -127,7 +128,7 @@ class BookTrendingItem extends StatelessWidget {
                               Column(
                                 children: [
                                   const Icon(
-                                    Icons.shopping_cart,
+                                    BeeAppIcons.cart,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
@@ -143,7 +144,7 @@ class BookTrendingItem extends StatelessWidget {
                               Column(
                                 children: [
                                   const Icon(
-                                    Icons.comment_rounded,
+                                    BeeAppIcons.comment,
                                     size: 18,
                                     color: Color.fromRGBO(2, 123, 118, 1),
                                   ),
@@ -171,8 +172,9 @@ class BookTrendingItem extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                     color: Color.fromRGBO(7, 116, 118, 1)),
                               ),
+                              SizedBox(width: 5,),
                               Icon(
-                                Icons.navigate_next,
+                                BeeAppIcons.arrow_right,
                                 color: Color.fromRGBO(7, 116, 118, 1),
                                 size: 18,
                               )

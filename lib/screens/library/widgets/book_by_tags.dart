@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:library_online_application/api/book_api.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/models/book.dart';
 import 'package:library_online_application/models/tag.dart';
 import 'package:library_online_application/screens/book-detail/book_detail.dart';
@@ -148,7 +149,7 @@ class _BookByTagsState extends State<BookByTags> {
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.thumb_up,
+                            BeeAppIcons.thumb_up,
                             color: Color(0xFF6D6D6D),
                             size: 18,
                           ),
@@ -183,7 +184,7 @@ class _BookByTagsState extends State<BookByTags> {
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.shopping_cart,
+                            BeeAppIcons.cart,
                             color: Color(0xFF6D6D6D),
                             size: 18,
                           ),
