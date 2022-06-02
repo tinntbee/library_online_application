@@ -1,24 +1,32 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:library_online_application/api/tag_api.dart';
+import 'package:library_online_application/models/tag.dart';
 import 'package:library_online_application/screens/search-in-library/search_in_library.dart';
 
 class ResultSearchBar extends StatefulWidget {
-  const ResultSearchBar({Key? key}) : super(key: key);
-
+  final TextEditingController searchController;
+  final Function submit;
+  const ResultSearchBar(
+      {Key? key, required this.searchController, required this.submit})
+      : super(key: key);
   @override
   State<ResultSearchBar> createState() => _ResultSearchBarState();
 }
 
 class _ResultSearchBarState extends State<ResultSearchBar> {
-  final searchController = TextEditingController();
   bool searchOnFocus = false;
   bool searchIsValued = false;
   FocusNode focusNode = FocusNode();
+  String _idTagCurrent = "";
+  List<Tag> tags = [];
 
   @override
   void initState() {
     super.initState();
+    getTags();
+
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         setState(() {
@@ -30,14 +38,14 @@ class _ResultSearchBarState extends State<ResultSearchBar> {
         });
       }
     });
-    searchController.addListener(() {
-      if (searchController.text.isNotEmpty & !searchIsValued) {
+    widget.searchController.addListener(() {
+      if (widget.searchController.text.isNotEmpty & !searchIsValued) {
         setState(() {
           searchIsValued = true;
         });
         return;
       }
-      if (searchController.text.isEmpty & searchIsValued) {
+      if (widget.searchController.text.isEmpty & searchIsValued) {
         setState(() {
           searchIsValued = false;
         });
@@ -47,26 +55,39 @@ class _ResultSearchBarState extends State<ResultSearchBar> {
   }
 
   void _handleClearSearch() {
-    searchController.clear();
+    widget.searchController.clear();
+  }
+
+  void _handleNavigateToSearchScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SearchInLibrary(
+        searchText: '',
+      ),
+    ));
+  }
+
+  Future<void> getTags() async {
+    List<Tag> listTags = await TagApi.getTags();
+    setState(() {
+      tags = listTags;
+    });
+  }
+
+  void _changeTagCurrent(String? tagId) {
+    if (tagId?.compareTo(_idTagCurrent) == 0) {
+      setState(() {
+        _idTagCurrent = "";
+      });
+    } else {
+      setState(() {
+        _idTagCurrent = tagId ?? "";
+      });
+    }
+    widget.submit(tagId);
   }
 
   @override
   Widget build(BuildContext context) {
-    void _handleNavigateToSearchScreen(BuildContext context) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SearchInLibrary(),
-      ));
-    }
-
-    final List<String> tags = [
-      "Truyen ngan",
-      "Khoa hoc",
-      "Cong nghe",
-      "Tam ly hoc",
-      "Lich su",
-      "Tieu thuyet"
-    ];
-
     return SliverPersistentHeader(
       floating: true,
       pinned: false,
@@ -110,15 +131,12 @@ class _ResultSearchBarState extends State<ResultSearchBar> {
                         Expanded(
                           child: TextFormField(
                             onFieldSubmitted: (value) {
-                              print(value);
-                              if (value.isNotEmpty) {
-                                _handleNavigateToSearchScreen(context);
-                              }
+                              widget.submit(_idTagCurrent);
                             },
                             style: TextStyle(
                                 color: Color.fromRGBO(109, 109, 109, 1)),
                             focusNode: focusNode,
-                            controller: searchController,
+                            controller: widget.searchController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -149,8 +167,11 @@ class _ResultSearchBarState extends State<ResultSearchBar> {
                       ],
                     ),
                   ),
-                  Container(
+                  Expanded(
+                      child: Container(
                     width: double.infinity,
+                    height: double.infinity,
+                    padding: EdgeInsets.only(bottom: 5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -165,42 +186,64 @@ class _ResultSearchBarState extends State<ResultSearchBar> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Wrap(
-                          children: tags
-                              .map((e) => Container(
-                                    margin: const EdgeInsets.all(3),
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: const Color(0xFF6D6D6D)
-                                            .withOpacity(0.1)),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async {}, // Handle your onTap
-                                        child: Ink(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8, horizontal: 10),
-                                            child: Text(
-                                              e,
-                                              style: const TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle: FontStyle.italic,
-                                                  color: Color(0xFF6D6D6D)),
+                        Expanded(
+                            child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: ListView(
+                            children: [
+                              Wrap(
+                                children: tags
+                                    .map((e) => Container(
+                                          margin: const EdgeInsets.all(3),
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(10)),
+                                              color: e.id == _idTagCurrent
+                                                  ? const Color(0xFFA4A4A4)
+                                                  : const Color(0xFF6D6D6D)
+                                                      .withOpacity(0.1)),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () {
+                                                _changeTagCurrent(e.id);
+                                              }, // Handle your onTap
+                                              child: Ink(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    e.name!,
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        color: e.id ==
+                                                                _idTagCurrent
+                                                            ? Colors.white
+                                                            : Color(
+                                                                0xFF6D6D6D)),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                        )
+                                        ))
+                                    .toList(),
+                              )
+                            ],
+                          ),
+                        ))
                       ],
                     ),
-                  )
+                  ))
                 ],
               ))),
     );

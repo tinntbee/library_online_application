@@ -206,8 +206,8 @@ class _BookByTagsState extends State<BookByTags> {
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.favorite,
-                            color: Color(0xFF6D6D6D),
+                            BeeAppIcons.flower,
+                            color: Color(0xFFF9B700),
                             size: 18,
                           ),
                           const SizedBox(

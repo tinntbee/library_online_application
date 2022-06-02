@@ -27,11 +27,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     // Future<void> getBook() async {
     //   print(await BookApi.getBookByTag("61b982603cd1052a8febe8fc"));
     // }
-    void handleSearch() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SearchInLibrary(),
-      ));
-    }
 
     // getBook();
     return Scaffold(
@@ -40,9 +35,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           // persistent header
-          LibrarySearchBar(
-            handleSearch: handleSearch,
-          ),
+          LibrarySearchBar(),
           SliverToBoxAdapter(
             child: Column(
               children: [

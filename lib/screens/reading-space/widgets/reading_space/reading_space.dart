@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_space/note_space.dart';
 import 'package:library_online_application/screens/search-in-library/widgets/result_search_bar.dart';
-import 'package:library_online_application/widgets/stateless/count_down.dart';
+import 'package:library_online_application/widgets/statefull/count_down.dart';
+import 'package:library_online_application/widgets/statefull/translator.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ReadingSpace extends StatefulWidget {
@@ -14,6 +15,55 @@ class ReadingSpace extends StatefulWidget {
 
 class _ReadingSpaceState extends State<ReadingSpace> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+  final _pdfController = PdfViewerController();
+  int _pageNumber = 0;
+  int _pageCount = 0;
+
+  var countDown;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pdfController.addListener(_pdfChange);
+    countDown = StreamBuilder<dynamic>(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return CountDown();
+    });
+  }
+
+  void _pdfChange({String? property}) {
+    print(property);
+    if (property != null) {
+      switch (property) {
+        case "pageCount":
+          _pageCountChanged();
+          break;
+        case "pageChanged":
+          _pageNumberChanged();
+          break;
+        default:
+      }
+    }
+  }
+
+  void _pageCountChanged({String? property}) {
+    if (_pdfController.pageCount != null &&
+        _pageCount != _pdfController.pageCount) {
+      setState(() {
+        _pageCount = _pdfController.pageCount;
+      });
+    }
+  }
+
+  void _pageNumberChanged({String? property}) {
+    if (_pdfController.pageNumber != null &&
+        _pageNumber != _pdfController.pageNumber) {
+      setState(() {
+        _pageNumber = _pdfController.pageNumber;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +87,7 @@ class _ReadingSpaceState extends State<ReadingSpace> {
                   canShowScrollHead: false,
                   scrollDirection: PdfScrollDirection.vertical,
                   pageSpacing: 0,
+                  controller: _pdfController,
                 ),
               ),
               Positioned(
@@ -52,16 +103,16 @@ class _ReadingSpaceState extends State<ReadingSpace> {
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          "27",
+                          _pageNumber.toString(),
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.white),
                         ),
                         Text(
-                          "/100",
+                          "/" + _pageCount.toString(),
                           style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -70,35 +121,8 @@ class _ReadingSpaceState extends State<ReadingSpace> {
                       ],
                     ),
                   )),
-              Positioned(
-                top: 100,
-                right: 4,
-                child: CountDown()
-              ),
-              Positioned(
-                top: 150,
-                right: 4,
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Opacity(
-                    opacity: 0.5,
-                    child: Material(
-                      color: const Color(0xFF185F75),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: InkWell(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        onTap: () {}, // Handle your onTap
-                        child: Ink(
-                          child: const Icon(BeeAppIcons.translator,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              Positioned(top: 100, right: 4, child: countDown),
+              Positioned(top: 150, right: 4, child: Translator()),
               NoteSpace()
             ],
           )),

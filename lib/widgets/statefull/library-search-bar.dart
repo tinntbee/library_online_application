@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:library_online_application/screens/search-in-library/search_in_library.dart';
 
 class LibrarySearchBar extends StatefulWidget {
-  const LibrarySearchBar({Key? key, required this.handleSearch})
-      : super(key: key);
-  final VoidCallback handleSearch;
+  const LibrarySearchBar({
+    Key? key,
+  }) : super(key: key);
   @override
   State<LibrarySearchBar> createState() => _LibrarySearchBarState();
 }
@@ -53,8 +53,10 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    void _handleNavigateToSearchScreen(BuildContext context) {
-      widget.handleSearch();
+    void _handleSearch(String value) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SearchInLibrary(searchText: value,),
+      ));
     }
 
     final List<String> tags = [
@@ -109,9 +111,8 @@ class _LibrarySearchBarState extends State<LibrarySearchBar> {
                         Expanded(
                           child: TextFormField(
                             onFieldSubmitted: (value) {
-                              print(value);
                               if (value.isNotEmpty) {
-                                _handleNavigateToSearchScreen(context);
+                                _handleSearch(value);
                               }
                             },
                             style: TextStyle(

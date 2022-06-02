@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:library_online_application/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:library_online_application/models/app_user.dart';
+import 'package:library_online_application/providers/api_provider.dart';
 import 'package:library_online_application/screens/login/login_screen.dart';
 
 import '../api/apis.dart';
@@ -24,7 +24,8 @@ class Authentication {
 
     if (user != null && idToken != null) {
       try {
-        appUser = await fetchSign(idToken.toString());
+        dynamic response = await ApiProvider.login(idToken.toString());
+        appUser = AppUser.fromJson(response.body);
         print(await user.getIdToken(false));
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -69,7 +70,8 @@ class Authentication {
         );
 
         idToken = googleSignInAuthentication.idToken;
-        appUser = await fetchSign(idToken.toString());
+        dynamic response = await ApiProvider.login(idToken.toString());
+        appUser = AppUser.fromJson(response.body);
 
         try {
           final UserCredential userCredential =
