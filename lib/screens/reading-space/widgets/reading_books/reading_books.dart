@@ -6,6 +6,7 @@ import 'package:library_online_application/providers/bookcase_provider.dart';
 import 'package:library_online_application/providers/reading_space_provider.dart';
 import 'package:library_online_application/res/stackstacked_card_carousel/stacked_card_carousel.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_books/reading_book_item.dart';
+import 'package:provider/provider.dart';
 
 class ReadingBooks extends StatefulWidget {
   final List<Note> notesActive;
@@ -133,7 +134,12 @@ class _ReadingBooksState extends State<ReadingBooks> {
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        onTap: () {}, // Handle your onTap
+                                        onTap: () {
+                                          Provider.of<ReadingSpaceProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .closeAll();
+                                        }, // Handle your onTap
                                         child: Ink(
                                             child: Row(
                                           mainAxisAlignment:

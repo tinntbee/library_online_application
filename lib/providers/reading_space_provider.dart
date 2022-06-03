@@ -69,6 +69,12 @@ class ReadingSpaceProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> closeAll() async {
+    for (var note in _notesActive) {
+      closeAndUpdateNotesActive(note.id);
+    }
+  }
+
   void deleteNote(String noteId) {
     print("delete");
     print(_notesActive);
