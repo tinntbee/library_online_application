@@ -89,8 +89,8 @@ class _ReadingAndNoteSpaceState extends State<ReadingAndNoteSpace>
                   width: double.infinity,
                   height: double.infinity,
                   padding: EdgeInsets.only(top: 68),
-                  child: SfPdfViewer.network(
-                    note.book.link ?? "",
+                  child: SfPdfViewer.asset(
+                    "assets/pdf/demo.pdf",
                     key: _pdfViewerKey,
                     password: note.book.key,
                     canShowScrollHead: false,

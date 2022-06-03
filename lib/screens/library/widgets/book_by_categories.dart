@@ -64,7 +64,20 @@ class _BookByCategoriesState extends State<BookByCategories> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: EdgeInsets.all(15),
-                  child: Image.network(categories[index].thumbnail.toString()),
+                  child: Image.network(
+                    categories[index].thumbnail.toString(),
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return Container(
+                        width: 140,
+                        height: 140,
+                        child: Center(
+                            child: const FlutterLogo(
+                          size: 130,
+                        )),
+                      );
+                    },
+                  ),
                 );
               },
             ),

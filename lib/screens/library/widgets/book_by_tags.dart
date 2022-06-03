@@ -133,6 +133,17 @@ class _BookByTagsState extends State<BookByTags> {
                             width: 143,
                             height: 209,
                             fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Container(
+                                width: 143,
+                                height: 209,
+                                child: Center(
+                                    child: const FlutterLogo(
+                                  size: 130,
+                                )),
+                              );
+                            },
                           ),
                         );
                       },

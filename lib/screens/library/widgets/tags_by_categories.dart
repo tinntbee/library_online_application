@@ -32,6 +32,17 @@ class TagsByCategories extends StatelessWidget {
                       width: 60,
                       height: 90,
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Container(
+                          width: 60,
+                          height: 90,
+                          child: Center(
+                              child: const FlutterLogo(
+                            size: 130,
+                          )),
+                        );
+                      },
                     )),
                 Container(
                     width: double.infinity,
@@ -95,6 +106,17 @@ class TagsByCategories extends StatelessWidget {
                       width: 60,
                       height: 90,
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Container(
+                          width: 60,
+                          height: 90,
+                          child: Center(
+                              child: const FlutterLogo(
+                            size: 130,
+                          )),
+                        );
+                      },
                     )),
                 Container(
                     width: double.infinity,

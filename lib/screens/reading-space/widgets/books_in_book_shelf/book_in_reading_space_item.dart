@@ -33,7 +33,20 @@ class BookInReadingSpaceItem extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: Image.network(book.book!.image ?? ""),
+                  child: Image.network(
+                    book.book!.image ?? "",
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return Container(
+                        width: 143,
+                        height: 209,
+                        child: Center(
+                            child: const FlutterLogo(
+                          size: 130,
+                        )),
+                      );
+                    },
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.all(8),
