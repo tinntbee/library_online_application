@@ -10,7 +10,6 @@ import 'package:library_online_application/screens/pomodoro/pomodoro_screen.dart
 import 'package:library_online_application/screens/reading-space/reading_space_screen.dart';
 import 'package:library_online_application/utils/authentication.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl_standalone.dart';
 
 void main() {
   runApp(
