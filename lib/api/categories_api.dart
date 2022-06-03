@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:library_online_application/api/apis.dart';
 import 'package:library_online_application/models/category.dart';
 
 class CategoryApi {
   static Future<List<Category>> getCategories() async {
     List<Category> categories = [];
     final response = await http.get(
-      Uri.parse('http://192.168.1.9:2005/categories'),
+      Uri.parse(Apis.categoryBaseUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

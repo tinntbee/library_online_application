@@ -4,30 +4,58 @@ import 'dart:convert';
 class AppUser {
   String? id;
   String? name;
+  String? gender;
+  String? nickname;
   String? email;
-  String avatar;
+  String? avatar;
+  String? avatarGoogle;
+  String? cover;
+  String? faculty;
+  DateTime? dob;
   int? hoa;
+  int? is_banned;
   AppUser({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.avatar,
-    required this.hoa,
+    this.id,
+    this.name,
+    this.gender,
+    this.nickname,
+    this.email,
+    this.avatar,
+    this.avatarGoogle,
+    this.cover,
+    this.faculty,
+    this.dob,
+    this.hoa,
+    this.is_banned,
   });
 
   AppUser copyWith({
     String? id,
     String? name,
+    String? gender,
+    String? nickname,
     String? email,
     String? avatar,
+    String? avatarGoogle,
+    String? cover,
+    String? faculty,
+    DateTime? dob,
     int? hoa,
+    int? is_banned,
   }) {
     return AppUser(
       id: id ?? this.id,
       name: name ?? this.name,
+      gender: gender ?? this.gender,
+      nickname: nickname ?? this.nickname,
       email: email ?? this.email,
       avatar: avatar ?? this.avatar,
+      avatarGoogle: avatarGoogle ?? this.avatarGoogle,
+      cover: cover ?? this.cover,
+      faculty: faculty ?? this.faculty,
+      dob: dob ?? this.dob,
       hoa: hoa ?? this.hoa,
+      is_banned: is_banned ?? this.is_banned,
     );
   }
 
@@ -35,20 +63,36 @@ class AppUser {
     return <String, dynamic>{
       'id': id,
       'name': name,
+      'gender': gender,
+      'nickname': nickname,
       'email': email,
       'avatar': avatar,
+      'avatarGoogle': avatarGoogle,
+      'cover': cover,
+      'faculty': faculty,
+      'dob': dob?.millisecondsSinceEpoch,
       'hoa': hoa,
+      'is_banned': is_banned,
     };
   }
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
-    Map<String, dynamic> user = map['user'];
     return AppUser(
-      id: user['_id'] as String?,
-      name: user['name'] as String?,
-      email: user['email'] as String?,
-      avatar: user['avatar'] as String,
-      hoa: user['hoa'] as int?,
+      id: map['_id'] != null ? map['_id'] as String : null,
+      name: map['name'] != null ? map['name'] as String : null,
+      gender: map['gender'] != null ? map['gender'] as String : null,
+      nickname: map['nickname'] != null ? map['nickname'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
+      avatar: map['avatar'] != null ? map['avatar'] as String : null,
+      avatarGoogle:
+          map['avatarGoogle'] != null ? map['avatarGoogle'] as String : null,
+      cover: map['cover'] != null ? map['cover'] as String : null,
+      faculty: map['faculty'] != null ? map['faculty'] as String : null,
+      dob: map['dob'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['dob'] as int)
+          : null,
+      hoa: map['hoa'] != null ? map['hoa'] as int : null,
+      is_banned: map['is_banned'] != null ? map['is_banned'] as int : null,
     );
   }
 
@@ -59,7 +103,7 @@ class AppUser {
 
   @override
   String toString() {
-    return 'AppUser(id: $id, name: $name, email: $email, avatar: $avatar, hoa: $hoa)';
+    return 'AppUser(id: $id, name: $name, gender: $gender, nickname: $nickname, email: $email, avatar: $avatar, avatarGoogle: $avatarGoogle, cover: $cover, faculty: $faculty, dob: $dob, hoa: $hoa, is_banned: $is_banned)';
   }
 
   @override
@@ -69,17 +113,31 @@ class AppUser {
     return other is AppUser &&
         other.id == id &&
         other.name == name &&
+        other.gender == gender &&
+        other.nickname == nickname &&
         other.email == email &&
         other.avatar == avatar &&
-        other.hoa == hoa;
+        other.avatarGoogle == avatarGoogle &&
+        other.cover == cover &&
+        other.faculty == faculty &&
+        other.dob == dob &&
+        other.hoa == hoa &&
+        other.is_banned == is_banned;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
         name.hashCode ^
+        gender.hashCode ^
+        nickname.hashCode ^
         email.hashCode ^
         avatar.hashCode ^
-        hoa.hashCode;
+        avatarGoogle.hashCode ^
+        cover.hashCode ^
+        faculty.hashCode ^
+        dob.hashCode ^
+        hoa.hashCode ^
+        is_banned.hashCode;
   }
 }

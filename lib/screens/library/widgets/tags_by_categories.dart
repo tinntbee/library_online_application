@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/models/category.dart';
 import 'package:library_online_application/models/tag.dart';
-import 'package:library_online_application/widgets/statefull/book_by_tags.dart';
+import 'package:library_online_application/screens/library/widgets/book_by_tags.dart';
 
 class TagsByCategories extends StatelessWidget {
   final String imageThumbnail;
