@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/api/note_api.dart';
+import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
 import 'package:library_online_application/screens/reading-space/widgets/books_in_book_shelf/books_in_book_shelf.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_books/reading_books.dart';
+import 'package:provider/provider.dart';
 
 class ReadingSpaceScreen extends StatefulWidget {
   const ReadingSpaceScreen({Key? key}) : super(key: key);
@@ -10,16 +14,26 @@ class ReadingSpaceScreen extends StatefulWidget {
 }
 
 class _ReadingSpaceScreenState extends State<ReadingSpaceScreen> {
-  static const List<Widget> _screens = <Widget>[
-    ReadingBooks(),
-    BooksInBookShelf(),
-  ];
+  bool _loading = true;
+
   int _selectedIndex = 0; //New
 
-  void _onChangeTapped(int index) {
+  Future<void> _onChangeTapped(int index) async {
+    await Future.delayed(Duration(seconds: 2));
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<ReadingSpaceProvider>(context, listen: false)
+        .fetchAndSetNotesActive()
+        .then((_) => setState(() {
+              _loading = false;
+            }));
+    super.initState();
   }
 
   @override
@@ -33,8 +47,22 @@ class _ReadingSpaceScreenState extends State<ReadingSpaceScreen> {
           fit: BoxFit.fill,
         ),
         IndexedStack(
-          children: _screens,
           index: _selectedIndex,
+          children: [
+            Consumer<ReadingSpaceProvider>(
+              builder: (context, value, child) {
+                if (value.notesActive.isEmpty) {
+                  _onChangeTapped(1);
+                } else {
+                  _onChangeTapped(0);
+                }
+                return ReadingBooks(
+                  notesActive: value.notesActive,
+                );
+              },
+            ),
+            BooksInBookShelf()
+          ],
         )
       ],
     );

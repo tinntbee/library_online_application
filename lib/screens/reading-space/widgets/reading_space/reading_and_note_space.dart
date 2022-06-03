@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
+import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_space/note_space.dart';
 import 'package:library_online_application/screens/search-in-library/widgets/result_search_bar.dart';
 import 'package:library_online_application/widgets/statefull/count_down.dart';
 import 'package:library_online_application/widgets/statefull/translator.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class ReadingSpace extends StatefulWidget {
-  final String bookId;
-  const ReadingSpace({Key? key, required this.bookId}) : super(key: key);
+class ReadingAndNoteSpace extends StatefulWidget {
+  final String noteId;
+  const ReadingAndNoteSpace({Key? key, required this.noteId}) : super(key: key);
 
   @override
-  State<ReadingSpace> createState() => _ReadingSpaceState();
+  State<ReadingAndNoteSpace> createState() => _ReadingAndNoteSpaceState();
 }
 
-class _ReadingSpaceState extends State<ReadingSpace> {
+class _ReadingAndNoteSpaceState extends State<ReadingAndNoteSpace>
+    with AutomaticKeepAliveClientMixin<ReadingAndNoteSpace> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final _pdfController = PdfViewerController();
   int _pageNumber = 0;
@@ -30,6 +34,8 @@ class _ReadingSpaceState extends State<ReadingSpace> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
       return CountDown();
     });
+    Provider.of<ReadingSpaceProvider>(context, listen: false)
+        .fetchAndSetNoteDetail(widget.noteId);
   }
 
   void _pdfChange({String? property}) {
@@ -66,67 +72,76 @@ class _ReadingSpaceState extends State<ReadingSpace> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ReadingSpaceAppBar(),
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      body: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding: EdgeInsets.only(top: 68),
-                child: SfPdfViewer.network(
-                  "https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/books%2Fpdf%2FTin%20Nguyen%20Trung%20-%20CV%20Fresher%20Front-end%20Software%20Engineer%20-%C4%91%C3%A3%20b%E1%BA%A3o%20v%E1%BB%87-ver1641914858683.pdf?alt=media&token=0f3dc075-a6e1-4300-94d8-a8cee43b1d5a",
-                  key: _pdfViewerKey,
-                  password: "1234",
-                  canShowScrollHead: false,
-                  scrollDirection: PdfScrollDirection.vertical,
-                  pageSpacing: 0,
-                  controller: _pdfController,
+    return Consumer<ReadingSpaceProvider>(builder: ((context, value, child) {
+      final Note note = value.notesActive[value.index ?? 0];
+      print(note);
+      return Scaffold(
+        appBar: ReadingSpaceAppBar(),
+        // resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        body: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: EdgeInsets.only(top: 68),
+                  child: SfPdfViewer.network(
+                    note.book.link ?? "",
+                    key: _pdfViewerKey,
+                    password: note.book.key,
+                    canShowScrollHead: false,
+                    scrollDirection: PdfScrollDirection.vertical,
+                    pageSpacing: 0,
+                    controller: _pdfController,
+                  ),
                 ),
-              ),
-              Positioned(
-                  top: 100,
-                  child: Container(
-                    width: 50,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        color: Color(0xFF000000).withOpacity(0.5),
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _pageNumber.toString(),
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          "/" + _pageCount.toString(),
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        )
-                      ],
-                    ),
-                  )),
-              Positioned(top: 100, right: 4, child: countDown),
-              Positioned(top: 150, right: 4, child: Translator()),
-            ],
-          )),
-    );
+                Positioned(
+                    top: 100,
+                    child: Container(
+                      width: 50,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          color: Color(0xFF000000).withOpacity(0.5),
+                          borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _pageNumber.toString(),
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            "/" + _pageCount.toString(),
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          )
+                        ],
+                      ),
+                    )),
+                Positioned(top: 100, right: 4, child: countDown),
+                Positioned(top: 150, right: 4, child: Translator()),
+                NoteSpace()
+              ],
+            )),
+      );
+    }));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class ReadingSpaceAppBar extends StatelessWidget

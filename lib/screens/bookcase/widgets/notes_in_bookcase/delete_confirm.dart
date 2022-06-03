@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:library_online_application/models/book.dart';
+import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/screens/reading-space/widgets/reading_space/note_space.dart';
 
 class DeleteConfirm extends StatelessWidget {
-  final Book book;
+  final Note note;
   final Function submit;
-  const DeleteConfirm({Key? key, required this.book, required this.submit})
+  const DeleteConfirm({Key? key, required this.note, required this.submit})
       : super(key: key);
 
   @override
@@ -27,10 +29,16 @@ class DeleteConfirm extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image.network(
-                book.image!,
+                note.image!,
                 width: 110,
                 height: 175,
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const FlutterLogo(
+                    size: 130,
+                  );
+                },
               ),
             ),
             const SizedBox(
@@ -54,7 +62,7 @@ class DeleteConfirm extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Do you want Delete “${book.name}” from your bookshelf?',
+                      'Do you want Delete “${note.name}” from your bookshelf?',
                       style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,

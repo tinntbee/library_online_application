@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/api/bookcase_api.dart';
-import 'package:library_online_application/screens/bookcase/widgets/books-in-book-case.dart';
-import 'package:library_online_application/screens/bookcase/widgets/notes-in-book-case.dart';
 import 'package:library_online_application/utils/authentication.dart';
+
+import 'widgets/books_in_bookcase/books-in-book-case.dart';
+import 'widgets/notes_in_bookcase/notes-in-book-case.dart';
 
 class BookcaseScreen extends StatefulWidget {
   const BookcaseScreen({Key? key}) : super(key: key);

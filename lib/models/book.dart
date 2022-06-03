@@ -21,7 +21,7 @@ class Book {
   String? link;
   String? linkIntro;
   String? key;
-  int? totalPage;
+  int? totalPages;
   int? totalLike;
   int? totalDislike;
   int? totalComment;
@@ -43,7 +43,7 @@ class Book {
     this.link,
     this.linkIntro,
     this.key,
-    this.totalPage,
+    this.totalPages,
     this.totalLike,
     this.totalDislike,
     this.totalComment,
@@ -66,7 +66,7 @@ class Book {
     String? link,
     String? linkIntro,
     String? key,
-    int? totalPage,
+    int? totalPages,
     int? totalLike,
     int? totalDislike,
     int? totalComment,
@@ -88,7 +88,7 @@ class Book {
       link: link ?? this.link,
       linkIntro: linkIntro ?? this.linkIntro,
       key: key ?? this.key,
-      totalPage: totalPage ?? this.totalPage,
+      totalPages: totalPages ?? this.totalPages,
       totalLike: totalLike ?? this.totalLike,
       totalDislike: totalDislike ?? this.totalDislike,
       totalComment: totalComment ?? this.totalComment,
@@ -113,7 +113,7 @@ class Book {
       'link': link,
       'linkIntro': linkIntro,
       'key': key,
-      'totalPage': totalPage,
+      'totalPages': totalPages,
       'totalLike': totalLike,
       'totalDislike': totalDislike,
       'totalComment': totalComment,
@@ -150,7 +150,7 @@ class Book {
       link: map['link'] as String?,
       linkIntro: map['linkIntro'] as String?,
       key: map['key'] as String?,
-      totalPage: map['totalPage'] as int?,
+      totalPages: map['totalPages'] as int?,
       totalLike: map['totalLike'] as int?,
       totalDislike: map['totalDislike'] as int?,
       totalComment: map['totalComment'] as int?,
@@ -164,7 +164,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, name: $name, namenosign: $namenosign, author: $author, authorNoSign: $authorNoSign, tags: $tags, description: $description, descriptionNoSign: $descriptionNoSign, image: $image, is_active: $is_active, quote: $quote, price: $price, link: $link, linkIntro: $linkIntro, key: $key, totalPage: $totalPage, totalLike: $totalLike, totalDislike: $totalDislike, totalComment: $totalComment, totalRead: $totalRead)';
+    return 'Book(id: $id, name: $name, namenosign: $namenosign, author: $author, authorNoSign: $authorNoSign, tags: $tags, description: $description, descriptionNoSign: $descriptionNoSign, image: $image, is_active: $is_active, quote: $quote, price: $price, link: $link, linkIntro: $linkIntro, key: $key, totalPages: $totalPages, totalLike: $totalLike, totalDislike: $totalDislike, totalComment: $totalComment, totalRead: $totalRead)';
   }
 
   @override
@@ -187,7 +187,7 @@ class Book {
         other.link == link &&
         other.linkIntro == linkIntro &&
         other.key == key &&
-        other.totalPage == totalPage &&
+        other.totalPages == totalPages &&
         other.totalLike == totalLike &&
         other.totalDislike == totalDislike &&
         other.totalComment == totalComment &&
@@ -211,7 +211,7 @@ class Book {
         link.hashCode ^
         linkIntro.hashCode ^
         key.hashCode ^
-        totalPage.hashCode ^
+        totalPages.hashCode ^
         totalLike.hashCode ^
         totalDislike.hashCode ^
         totalComment.hashCode ^

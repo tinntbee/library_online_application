@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:library_online_application/models/book_in_bookcase.dart';
-import 'package:library_online_application/widgets/stateless/delete_confirm.dart';
+import 'package:library_online_application/screens/bookcase/widgets/books_in_bookcase/create_note.dart';
 
-import '../../../models/book.dart';
+import '../../../../models/book.dart';
+import 'delete_confirm.dart';
 
 class BookInBookcaseItem extends StatelessWidget {
   final BookInBookcase book;
   final Function handleDelete;
+  final Function handleCreate;
   const BookInBookcaseItem(
-      {Key? key, required this.book, required this.handleDelete})
+      {Key? key,
+      required this.book,
+      required this.handleDelete,
+      required this.handleCreate})
       : super(key: key);
 
   Future showDeleteDialog(context, Book book, Function handleSubmit) async {
@@ -49,6 +54,42 @@ class BookInBookcaseItem extends StatelessWidget {
     showDeleteDialog(context, book.book!, handleDelete);
   }
 
+  Future showCreateNoteDialog(context, Book book, Function handleSubmit) async {
+    return await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return CreateNote(book: book, submit: handleSubmit);
+      },
+      transitionBuilder: (_, anim, __, child) {
+        var tween;
+        const curve = Curves.easeInOut;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+        } else {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+          ;
+        }
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  void handleCreateClick(context) {
+    showCreateNoteDialog(context, book.book!, handleCreate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
@@ -76,7 +117,9 @@ class BookInBookcaseItem extends StatelessWidget {
                 topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
           ),
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              handleCreateClick(context);
+            },
             backgroundColor: Color(0xFF027B76),
             foregroundColor: Colors.white,
             icon: BeeAppIcons.note,
@@ -134,6 +177,14 @@ class BookInBookcaseItem extends StatelessWidget {
                           height: 130,
                           width: 80,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const Center(
+                              child: FlutterLogo(
+                                size: 80,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(

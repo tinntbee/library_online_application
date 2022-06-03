@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:library_online_application/screens/reading-space/widgets/books_in_book_shelf/note_in_reading_space_item.dart';
+import 'package:library_online_application/api/bookcase_api.dart';
+import 'package:library_online_application/models/book_in_bookcase.dart';
+import 'package:library_online_application/providers/bookcase_provider.dart';
+import 'package:library_online_application/screens/reading-space/widgets/books_in_book_shelf/book_in_reading_space_item.dart';
+import 'package:provider/provider.dart';
 
 class BooksInReadingSpace extends StatefulWidget {
   const BooksInReadingSpace({Key? key}) : super(key: key);
@@ -10,6 +14,26 @@ class BooksInReadingSpace extends StatefulWidget {
 
 class _BooksInReadingSpaceState extends State<BooksInReadingSpace>
     with AutomaticKeepAliveClientMixin<BooksInReadingSpace> {
+  bool _loading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getBooks(context);
+  }
+
+  Future<void> getBooks(BuildContext context) async {
+    setState(() {
+      _loading = true;
+    });
+    Provider.of<BookcaseProvider>(context, listen: false)
+        .fetchAndSetBooks()
+        .then((_) => setState(() {
+              _loading = false;
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
@@ -22,25 +46,31 @@ class _BooksInReadingSpaceState extends State<BooksInReadingSpace>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                          BookInReadingSpaceItem(),
-                          BookInReadingSpaceItem(),
-                          BookInReadingSpaceItem()
-                        ])),
+                        child: Consumer<BookcaseProvider>(
+                      builder: ((context, value, child) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: value.books
+                              .asMap()
+                              .entries
+                              .map((e) => e.key % 2 == 0
+                                  ? BookInReadingSpaceItem(book: e.value)
+                                  : SizedBox())
+                              .toList())),
+                    )),
                     SizedBox(
                       width: 16,
                     ),
                     Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                          BookInReadingSpaceItem(),
-                          BookInReadingSpaceItem(),
-                          BookInReadingSpaceItem(),
-                          BookInReadingSpaceItem()
-                        ])),
+                        child: Consumer<BookcaseProvider>(
+                            builder: (context, value, child) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: value.books
+                                    .asMap()
+                                    .entries
+                                    .map((e) => e.key % 2 == 1
+                                        ? BookInReadingSpaceItem(book: e.value)
+                                        : SizedBox())
+                                    .toList()))),
                   ],
                 ),
                 Container(

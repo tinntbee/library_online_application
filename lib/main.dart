@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/providers/bookcase_provider.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
 import 'package:library_online_application/screens/app-intro/app_intro_screen.dart';
 import 'package:library_online_application/screens/bookcase/bookcase_screen.dart';
 import 'package:library_online_application/screens/flaskcard/flaskcard_screen.dart';
@@ -14,7 +15,10 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => BookcaseProvider()),
+        ChangeNotifierProvider<BookcaseProvider>(
+            create: (_) => new BookcaseProvider()),
+        ChangeNotifierProvider<ReadingSpaceProvider>(
+            create: (_) => new ReadingSpaceProvider())
       ],
       child: const MyApp(),
     ),

@@ -44,6 +44,14 @@ class ApiProvider {
     return response;
   }
 
+  static Future<http.Response> put(String url, dynamic data) async {
+    print('>> put url "${url}"');
+    http.Response response =
+        await http.put(Uri.parse(url), body: data, headers: headers);
+    updateCookie(response);
+    return response;
+  }
+
   static Future<http.Response> delete(String url) async {
     print('>> delete url "${url}"');
     http.Response response =

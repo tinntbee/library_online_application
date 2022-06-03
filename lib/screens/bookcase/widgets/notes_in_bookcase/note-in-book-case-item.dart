@@ -2,14 +2,96 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/models/note.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
+import 'package:library_online_application/screens/reading-space/widgets/reading_space/bee_space.dart';
+import 'package:provider/provider.dart';
+import 'delete_confirm.dart';
+import 'modify_note.dart';
 
 class NoteInBookcaseItem extends StatelessWidget {
   final Note note;
   final Function handleDelete;
+  final Function handleModify;
 
   const NoteInBookcaseItem(
-      {Key? key, required this.note, required this.handleDelete})
+      {Key? key,
+      required this.note,
+      required this.handleDelete,
+      required this.handleModify})
       : super(key: key);
+
+  Future showDeleteDialog(context, Note note, Function handleSubmit) async {
+    return await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return DeleteConfirm(note: note, submit: handleSubmit);
+      },
+      transitionBuilder: (_, anim, __, child) {
+        var tween;
+        const curve = Curves.easeInOut;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+        } else {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+          ;
+        }
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  void handleDeleteClick(context) {
+    showDeleteDialog(context, note, handleDelete);
+  }
+
+  Future showModifyNoteDialog(context, Note note, Function handleSubmit) async {
+    return await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return ModifyNote(note: note, submit: handleSubmit);
+      },
+      transitionBuilder: (_, anim, __, child) {
+        var tween;
+        const curve = Curves.easeInOut;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+        } else {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+          ;
+        }
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  void handleModifyClick(context) {
+    showModifyNoteDialog(context, note, handleModify);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +120,9 @@ class NoteInBookcaseItem extends StatelessWidget {
                 topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
           ),
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              handleModifyClick(context);
+            },
             backgroundColor: Color(0xFF027B76),
             foregroundColor: Colors.white,
             icon: BeeAppIcons.note,
@@ -59,7 +143,9 @@ class NoteInBookcaseItem extends StatelessWidget {
           SlidableAction(
             // An action can be bigger than the others.
             flex: 2,
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              handleDeleteClick(context);
+            },
             backgroundColor: Color(0xFFEB5757),
             foregroundColor: Colors.white,
             icon: BeeAppIcons.delete,
@@ -79,7 +165,14 @@ class NoteInBookcaseItem extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {}, // Handle your onTap
+              onTap: () async {
+                await Provider.of<ReadingSpaceProvider>(context, listen: false)
+                    .fetchAndSetNoteDetail(note.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BeeSpace()),
+                );
+              }, // Handle your onTap
               child: Ink(
                 child: Padding(
                   padding:
@@ -94,6 +187,12 @@ class NoteInBookcaseItem extends StatelessWidget {
                           height: 130,
                           width: 130,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return const FlutterLogo(
+                              size: 130,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(
@@ -142,7 +241,7 @@ class NoteInBookcaseItem extends StatelessWidget {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10))),
                               child: Text(
-                                "Page ${note.page} of ${note.book.totalPage}",
+                                "Page ${note.page} of ${note.book.totalPages}",
                                 style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,

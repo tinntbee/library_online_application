@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
+import 'package:library_online_application/screens/reading-space/widgets/reading_space/bee_space.dart';
+import 'package:library_online_application/screens/reading-space/widgets/reading_space/reading_and_note_space.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_space/reading_space.dart';
+import 'package:provider/provider.dart';
 
 class ReadingBookItem extends StatelessWidget {
-  const ReadingBookItem({Key? key, required this.isActive}) : super(key: key);
+  const ReadingBookItem({Key? key, required this.isActive, required this.note})
+      : super(key: key);
   final bool isActive;
+  final Note note;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -25,10 +33,12 @@ class ReadingBookItem extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
+              onTap: () async {
+                await Provider.of<ReadingSpaceProvider>(context, listen: false)
+                    .fetchAndSetNoteDetail(note.id);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ReadingSpace()),
+                  MaterialPageRoute(builder: (context) => BeeSpace()),
                 );
               }, // Handle your onTap
               child: Ink(
@@ -36,21 +46,28 @@ class ReadingBookItem extends StatelessWidget {
                 width: 254,
                 padding: const EdgeInsets.all(10),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: Image.network(
-                        "https://edit.org/images/cat/book-covers-big-2019101610.jpg",
+                        note.image ?? "",
                         height: 234,
                         width: 234,
                         fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const FlutterLogo(
+                            size: 234,
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    const Text(
-                      "Toi Thay Hoa Vang Tren Co Xanh",
+                    Text(
+                      note.name,
                       maxLines: 2,
                       style: TextStyle(
                           fontSize: 16,
@@ -85,15 +102,27 @@ class ReadingBookItem extends StatelessWidget {
               child: AnimatedRotation(
                 turns: isActive ? 0.5 : 0,
                 duration: Duration(milliseconds: 600),
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Color(0xFFFFFFFF).withOpacity(0.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(50))),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    onTap: () {
+                      Provider.of<ReadingSpaceProvider>(context, listen: false)
+                          .closeAndUpdateNotesActive(note.id);
+                    }, // Handle your onTap
+                    child: Ink(
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFFFFFFF).withOpacity(0.5),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50))),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

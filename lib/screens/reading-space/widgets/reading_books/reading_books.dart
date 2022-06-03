@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:library_online_application/api/note_api.dart';
+import 'package:library_online_application/models/book_in_bookcase.dart';
+import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/providers/bookcase_provider.dart';
+import 'package:library_online_application/providers/reading_space_provider.dart';
 import 'package:library_online_application/res/stackstacked_card_carousel/stacked_card_carousel.dart';
 import 'package:library_online_application/screens/reading-space/widgets/reading_books/reading_book_item.dart';
 
 class ReadingBooks extends StatefulWidget {
-  const ReadingBooks({Key? key}) : super(key: key);
+  final List<Note> notesActive;
+  const ReadingBooks({Key? key, required this.notesActive}) : super(key: key);
 
   @override
   State<ReadingBooks> createState() => _ReadingBooksState();
 }
 
 class _ReadingBooksState extends State<ReadingBooks> {
+  final readingSpaceProvider = ReadingSpaceProvider();
   int _itemActive = 0;
   void setItemActive(index) {
     print(index);
     setState(() {
       _itemActive = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -58,21 +71,24 @@ class _ReadingBooksState extends State<ReadingBooks> {
                   height: double.infinity,
                   child: Stack(
                     children: [
-                      StackedCardCarousel(
-                        type: StackedCardCarouselType.cardsStack,
-                        initialOffset: 40,
-                        spaceBetweenItems: 350,
-                        onPageChanged: (index) {
-                          setItemActive(index);
-                        },
-                        items: [
-                          ReadingBookItem(
-                            isActive: _itemActive == 0,
-                          ),
-                          ReadingBookItem(isActive: _itemActive == 1),
-                          ReadingBookItem(isActive: _itemActive == 2),
-                        ],
-                      ),
+                      widget.notesActive.length > 0
+                          ? StackedCardCarousel(
+                              type: StackedCardCarouselType.cardsStack,
+                              initialOffset: 40,
+                              spaceBetweenItems: 350,
+                              onPageChanged: (index) {
+                                setItemActive(index);
+                              },
+                              items: widget.notesActive
+                                  .asMap()
+                                  .entries
+                                  .map((e) => ReadingBookItem(
+                                        note: e.value,
+                                        isActive: _itemActive == e.key,
+                                      ))
+                                  .toList(),
+                            )
+                          : SizedBox(),
                       Positioned(
                           bottom: 0,
                           child: Container(
