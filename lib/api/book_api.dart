@@ -85,5 +85,22 @@ class BookApi {
     return books;
   }
 
-  
+  static Future<Book> detailBook(String? bookId) async {
+    final response = await http.get(
+      Uri.parse('${Apis.bookBaseUrl}/detail/' + bookId!),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      dynamic book = json.decode(response.body);
+      // Iterable l = r;
+      print(book);
+      return Book.fromJson(book);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to get Book By ID');
+    }
+  }
 }
