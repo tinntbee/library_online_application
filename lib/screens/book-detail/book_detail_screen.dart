@@ -1,10 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:library_online_application/providers/bookcase_provider.dart';
 import 'package:library_online_application/screens/book-detail/widgets/book_forum.dart';
 import 'package:library_online_application/screens/book-detail/widgets/book_info.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:library_online_application/widgets/stateless/notifycation_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 import '../../api/book_api.dart';
 import '../../models/book.dart';
@@ -45,6 +48,32 @@ class _BookDetailState extends State<BookDetail>
   }
 
   var tagId = "61b982ae3cd1052a8febe8fd";
+
+  Future<void> handleBuyBook(BuildContext context) async {
+    print(widget.bookId ?? "");
+    int status = await Provider.of<BookcaseProvider>(context, listen: false)
+        .buyBookAndUpdate(widget.bookId ?? "");
+    switch (status) {
+      case 200:
+        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+            "success", "Purchase success!", Color(0xFF27AE60)));
+        break;
+      case 210:
+        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+            "warning", "Book is exit in bookcase!", Color(0xFFF9B700)));
+        break;
+      case 211:
+        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar("error",
+            "Purchase Fail! Not have enough flower", Color(0xFFEB5757)));
+        break;
+
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+            "warning", "Something wrong!", Color(0xFFF9B700)));
+        break;
+    }
+    print(status);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -358,6 +387,9 @@ class _BookDetailState extends State<BookDetail>
                     textColor: Colors.redAccent,
                   ),
                   GButton(
+                    onPressed: () {
+                      handleBuyBook(context);
+                    },
                     icon: LineIcons.userPlus,
                     text: 'Add to Bookcase',
                     hoverColor: Colors.yellow,

@@ -80,4 +80,10 @@ class BookcaseApi {
       throw Exception('Failed to get Book By ID');
     }
   }
+
+  static Future<int> buyBook(String bookId) async {
+    final response = await ApiProvider.post(
+        '${Apis.bookcaseBaseUrl}/buyBook', <String, dynamic>{"bookId": bookId});
+    return response.statusCode;
+  }
 }

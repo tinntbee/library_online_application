@@ -5,6 +5,7 @@ import 'package:library_online_application/api/bookcase_api.dart';
 import 'package:library_online_application/api/note_api.dart';
 import 'package:library_online_application/models/book_in_bookcase.dart';
 import 'package:library_online_application/models/note.dart';
+import 'package:library_online_application/widgets/stateless/notifycation_bar.dart';
 
 class BookcaseProvider extends ChangeNotifier {
   List<BookInBookcase> _books = [];
@@ -82,6 +83,15 @@ class BookcaseProvider extends ChangeNotifier {
   void addBook(BookInBookcase book) {
     _books.add(book);
     notifyListeners();
+  }
+
+  Future<int> buyBookAndUpdate(String bookId) async {
+    int status = await BookcaseApi.buyBook(bookId);
+    if (status == 200) {
+      fetchAndSetBooks();
+    }
+    
+    return status;
   }
 
   Future<int> addNoteAndUpdate(Note note) async {
