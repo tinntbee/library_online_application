@@ -68,6 +68,7 @@ flutter:
     - assets/images/png/facebook_logo.png
     - assets/images/png/arrow_right_icon.png
     - assets/images/png/reading-space-background.png
+    - assets/pdf/demo.pdf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

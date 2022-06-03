@@ -60,6 +60,16 @@ class BookTrendingItem extends StatelessWidget {
                     width: 55,
                     height: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return Container(
+                        width: 55,
+                        child: Center(
+                            child: const FlutterLogo(
+                          size: 130,
+                        )),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -172,7 +182,9 @@ class BookTrendingItem extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                     color: Color.fromRGBO(7, 116, 118, 1)),
                               ),
-                              SizedBox(width: 5,),
+                              SizedBox(
+                                width: 5,
+                              ),
                               Icon(
                                 BeeAppIcons.arrow_right,
                                 color: Color.fromRGBO(7, 116, 118, 1),
