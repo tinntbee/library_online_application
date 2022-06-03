@@ -17,6 +17,7 @@ class CountDown extends StatefulWidget {
 
 class _CountDownState extends State<CountDown> with WidgetsBindingObserver {
   var countDownDialog;
+  bool _isStart = false;
   int _timePeriod = 0;
   int _endTime = DateTime.now().millisecondsSinceEpoch;
   CountdownTimerController? _countDownController;
@@ -62,8 +63,8 @@ class _CountDownState extends State<CountDown> with WidgetsBindingObserver {
   @override
   void initState() {
     // TODO: implement initState
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     countDownDialog = StreamBuilder<dynamic>(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
       return CountDownDialog();
@@ -117,35 +118,37 @@ class _CountDownState extends State<CountDown> with WidgetsBindingObserver {
   }
 
   void _timeOut() {
-    showGeneralDialog(
-      context: context,
-      barrierLabel: "Barrier",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 700),
-      pageBuilder: (_, __, ___) {
-        return pomodoroDialog();
-      },
-      transitionBuilder: (_, anim, __, child) {
-        var tween;
-        const curve = Curves.easeInOut;
-        if (anim.status == AnimationStatus.reverse) {
-          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
-              .chain(CurveTween(curve: curve));
-        } else {
-          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
-              .chain(CurveTween(curve: curve));
-          ;
-        }
-        return SlideTransition(
-          position: tween.animate(anim),
-          child: FadeTransition(
-            opacity: anim,
-            child: child,
-          ),
-        );
-      },
-    );
+    if (_isStart) {
+      showGeneralDialog(
+        context: context,
+        barrierLabel: "Barrier",
+        barrierDismissible: true,
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionDuration: Duration(milliseconds: 700),
+        pageBuilder: (_, __, ___) {
+          return pomodoroDialog();
+        },
+        transitionBuilder: (_, anim, __, child) {
+          var tween;
+          const curve = Curves.easeInOut;
+          if (anim.status == AnimationStatus.reverse) {
+            tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+                .chain(CurveTween(curve: curve));
+          } else {
+            tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+                .chain(CurveTween(curve: curve));
+            ;
+          }
+          return SlideTransition(
+            position: tween.animate(anim),
+            child: FadeTransition(
+              opacity: anim,
+              child: child,
+            ),
+          );
+        },
+      );
+    }
   }
 
   Widget pomodoroDialog() {

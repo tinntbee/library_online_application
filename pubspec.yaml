@@ -41,6 +41,7 @@ dependencies:
   html_editor_enhanced: ^2.4.0+1
   http: ^0.13.4
   morphable_shape: ^1.6.4
+  provider: ^6.0.3
   sliding_up_panel: ^2.0.0+1
   syncfusion_flutter_pdfviewer: ^20.1.52-beta
 

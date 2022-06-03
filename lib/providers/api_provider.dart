@@ -8,7 +8,7 @@ class ApiProvider {
   static Map<String, String> headers = {};
 
   static Future<http.Response> login(String idToken) async {
-    final response = await http.post(
+    final http.Response response = await http.post(
       Uri.parse('${Apis.accountBaseUrl}/login-google'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -20,7 +20,6 @@ class ApiProvider {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      print(response.headers);
       // print(user);
     } else {
       // If the server did not return a 200 OK response,
@@ -45,6 +44,14 @@ class ApiProvider {
     return response;
   }
 
+  static Future<http.Response> delete(String url) async {
+    print('>> delete url "${url}"');
+    http.Response response =
+        await http.delete(Uri.parse(url), headers: headers);
+    updateCookie(response);
+    return response;
+  }
+
   static void updateCookie(http.Response response) {
     String? rawCookie = response.headers['set-cookie'];
     if (rawCookie != null) {
@@ -52,6 +59,5 @@ class ApiProvider {
       headers['cookie'] =
           (index == -1) ? rawCookie : rawCookie.substring(0, index);
     }
-    print(headers);
   }
 }

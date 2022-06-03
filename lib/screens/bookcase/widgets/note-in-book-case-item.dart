@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
+import 'package:library_online_application/models/note.dart';
 
 class NoteInBookcaseItem extends StatelessWidget {
-  const NoteInBookcaseItem({Key? key}) : super(key: key);
+  final Note note;
+  final Function handleDelete;
+
+  const NoteInBookcaseItem(
+      {Key? key, required this.note, required this.handleDelete})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +90,7 @@ class NoteInBookcaseItem extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Image.network(
-                          "https://edit.org/images/cat/book-covers-big-2019101610.jpg",
+                          note.image!,
                           height: 130,
                           width: 130,
                           fit: BoxFit.cover,
@@ -102,8 +108,8 @@ class NoteInBookcaseItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Toi Thay Hoa Vang Tren Co Xanh",
+                            Text(
+                              note.name,
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -114,8 +120,8 @@ class NoteInBookcaseItem extends StatelessWidget {
                             SizedBox(
                               height: 5,
                             ),
-                            const Text(
-                              "Link with book: “Toi thay hoa vang tren co xanh” - Nguyen Nhat Anh",
+                            Text(
+                              "Link with book: “${note.book.name}” - ${note.book.author ?? ""}",
                               style: TextStyle(
                                   fontSize: 12,
                                   fontStyle: FontStyle.italic,
@@ -135,8 +141,8 @@ class NoteInBookcaseItem extends StatelessWidget {
                                       const Color(0xFFF9B700).withOpacity(0.1),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10))),
-                              child: const Text(
-                                "Page 17 of 200",
+                              child: Text(
+                                "Page ${note.page} of ${note.book.totalPage}",
                                 style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,

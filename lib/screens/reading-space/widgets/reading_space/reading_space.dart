@@ -32,7 +32,6 @@ class _ReadingSpaceState extends State<ReadingSpace> {
   }
 
   void _pdfChange({String? property}) {
-    print(property);
     if (property != null) {
       switch (property) {
         case "pageCount":

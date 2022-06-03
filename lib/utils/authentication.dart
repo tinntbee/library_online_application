@@ -9,6 +9,7 @@ import 'package:library_online_application/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:library_online_application/models/app_user.dart';
 import 'package:library_online_application/providers/api_provider.dart';
+import 'package:library_online_application/providers/session_provider.dart';
 import 'package:library_online_application/screens/login/login_screen.dart';
 
 import '../api/apis.dart';
@@ -24,9 +25,9 @@ class Authentication {
 
     if (user != null && idToken != null) {
       try {
-        dynamic response = await ApiProvider.login(idToken.toString());
-        appUser = AppUser.fromJson(response.body);
-        print(await user.getIdToken(false));
+        http.Response response = await ApiProvider.login(idToken.toString());
+        appUser = AppUser.fromMap(
+            (json.decode(response.body) as Map<String, dynamic>)["user"]);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => MyHomePage(),
@@ -70,8 +71,9 @@ class Authentication {
         );
 
         idToken = googleSignInAuthentication.idToken;
-        dynamic response = await ApiProvider.login(idToken.toString());
-        appUser = AppUser.fromJson(response.body);
+        http.Response response = await ApiProvider.login(idToken.toString());
+        appUser = AppUser.fromMap(
+            (json.decode(response.body) as Map<String, dynamic>)["user"]);
 
         try {
           final UserCredential userCredential =

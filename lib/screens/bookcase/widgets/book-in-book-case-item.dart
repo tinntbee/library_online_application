@@ -1,20 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:library_online_application/models/book_in_bookcase.dart';
+import 'package:library_online_application/widgets/stateless/delete_confirm.dart';
+
+import '../../../models/book.dart';
 
 class BookInBookcaseItem extends StatelessWidget {
-  const BookInBookcaseItem({Key? key}) : super(key: key);
+  final BookInBookcase book;
+  final Function handleDelete;
+  const BookInBookcaseItem(
+      {Key? key, required this.book, required this.handleDelete})
+      : super(key: key);
+
+  Future showDeleteDialog(context, Book book, Function handleSubmit) async {
+    return await showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return DeleteConfirm(book: book, submit: handleSubmit);
+      },
+      transitionBuilder: (_, anim, __, child) {
+        var tween;
+        const curve = Curves.easeInOut;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+        } else {
+          tween = Tween(begin: Offset(0, 1), end: Offset.zero)
+              .chain(CurveTween(curve: curve));
+          ;
+        }
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  void handleDeleteClick(context) {
+    showDeleteDialog(context, book.book!, handleDelete);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> tags = [
-      "Truyen ngan",
-      "Khoa hoc",
-      "Cong nghe",
-      "Tam ly hoc",
-      "Lich su",
-      "Tieu thuyet"
-    ];
     return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
@@ -61,7 +97,9 @@ class BookInBookcaseItem extends StatelessWidget {
           SlidableAction(
             // An action can be bigger than the others.
             flex: 2,
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              handleDeleteClick(context);
+            },
             backgroundColor: Color(0xFFEB5757),
             foregroundColor: Colors.white,
             icon: BeeAppIcons.delete,
@@ -92,9 +130,10 @@ class BookInBookcaseItem extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Image.network(
-                          "https://edit.org/images/cat/book-covers-big-2019101610.jpg",
+                          book.book!.image!,
                           height: 130,
                           width: 80,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       const SizedBox(
@@ -109,8 +148,8 @@ class BookInBookcaseItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Toi Thay Hoa Vang Tren Co Xanh",
+                            Text(
+                              book.book!.name,
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -133,7 +172,7 @@ class BookInBookcaseItem extends StatelessWidget {
                                     height: 25,
                                     child: ListView(
                                       scrollDirection: Axis.horizontal,
-                                      children: tags
+                                      children: book.book!.tags!
                                           .map((e) => Container(
                                                 alignment: Alignment.center,
                                                 margin: const EdgeInsets.all(3),
@@ -150,7 +189,7 @@ class BookInBookcaseItem extends StatelessWidget {
                                                         const Color(0xFF26905B)
                                                             .withOpacity(0.1)),
                                                 child: Text(
-                                                  e,
+                                                  e.name ?? "-",
                                                   style: const TextStyle(
                                                       fontSize: 10,
                                                       fontWeight:
@@ -166,9 +205,9 @@ class BookInBookcaseItem extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Text(
-                              "“Gia tốc và hấp dẫn chỉ có thể tương đương với nhau nếu một vật thể có khối lượng lớn...",
-                              style: TextStyle(
+                            Text(
+                              book.book!.quote ?? "",
+                              style: const TextStyle(
                                   fontSize: 12,
                                   fontStyle: FontStyle.italic,
                                   fontWeight: FontWeight.w400,
@@ -184,8 +223,8 @@ class BookInBookcaseItem extends StatelessWidget {
                                       const Color(0xFFF9B700).withOpacity(0.1),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(10))),
-                              child: const Text(
-                                "Process 78%",
+                              child: Text(
+                                "Process ${book.progress}%",
                                 style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,

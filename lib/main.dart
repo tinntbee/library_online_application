@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
+import 'package:library_online_application/providers/bookcase_provider.dart';
 import 'package:library_online_application/screens/app-intro/app_intro_screen.dart';
 import 'package:library_online_application/screens/bookcase/bookcase_screen.dart';
 import 'package:library_online_application/screens/flaskcard/flaskcard_screen.dart';
@@ -7,9 +8,17 @@ import 'package:library_online_application/screens/library/library_screen.dart';
 import 'package:library_online_application/screens/pomodoro/pomodoro_screen.dart';
 import 'package:library_online_application/screens/reading-space/reading_space_screen.dart';
 import 'package:library_online_application/utils/authentication.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => BookcaseProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

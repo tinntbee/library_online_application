@@ -5,7 +5,7 @@ import 'package:library_online_application/screens/search-in-library/search_in_l
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key, required this.handleSearch}) : super(key: key);
-  final VoidCallback handleSearch;
+  final Function handleSearch;
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -48,12 +48,13 @@ class _SearchBarState extends State<SearchBar> {
 
   void _handleClearSearch() {
     searchController.clear();
+    widget.handleSearch("");
   }
 
   @override
   Widget build(BuildContext context) {
-    void _handleNavigateToSearchScreen(BuildContext context) {
-      widget.handleSearch();
+    void _handleOnChange(String value) {
+      widget.handleSearch(value);
     }
 
     final List<String> tags = [
@@ -73,9 +74,9 @@ class _SearchBarState extends State<SearchBar> {
           maxHeight: 55.0,
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10)),
               ),
@@ -99,11 +100,8 @@ class _SearchBarState extends State<SearchBar> {
                         ),
                         Expanded(
                           child: TextFormField(
-                            onFieldSubmitted: (value) {
-                              print(value);
-                              if (value.isNotEmpty) {
-                                _handleNavigateToSearchScreen(context);
-                              }
+                            onChanged: (value) {
+                              _handleOnChange(value);
                             },
                             style: TextStyle(
                                 color: Color.fromRGBO(109, 109, 109, 1)),

@@ -31,14 +31,17 @@ class LibraryAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _LibraryAppBarState extends State<LibraryAppBar> {
+  AppUser? user = Authentication.appUser;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    user = Authentication.appUser;
+    print(Authentication.appUser);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AppUser? user = Authentication.appUser;
-    String avatar = "jkgfds";
-    if (user != null) {
-      avatar = user.avatar;
-    }
-
     return Container(
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       color: Colors.white,
@@ -68,7 +71,7 @@ class _LibraryAppBarState extends State<LibraryAppBar> {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(30)),
                   child: Image.network(
-                    avatar,
+                    Authentication.appUser!.avatar!,
                     width: 34,
                     height: 34,
                     fit: BoxFit.cover,
