@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:library_online_application/models/book.dart';
 import 'package:http/http.dart' as http;
+import 'package:library_online_application/models/book_detail.dart';
 import 'package:library_online_application/providers/api_provider.dart';
 
 import 'apis.dart';
@@ -94,9 +95,19 @@ class BookApi {
     );
     if (response.statusCode == 200) {
       dynamic book = json.decode(response.body);
-      // Iterable l = r;
-      print(book);
       return Book.fromJson(book);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to get Book By ID');
+    }
+  }
+
+  static Future<BookDetail> getBookDetail(String bookId) async {
+    final response =
+        await ApiProvider.get('${Apis.bookBaseUrl}/detail/$bookId');
+    if (response.statusCode == 200) {
+      return BookDetail.fromJson(response.body);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.

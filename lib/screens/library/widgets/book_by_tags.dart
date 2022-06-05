@@ -1,14 +1,10 @@
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:library_online_application/api/book_api.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/models/book.dart';
 import 'package:library_online_application/models/tag.dart';
-
-import '../../book-detail/book_detail_screen.dart';
+import 'package:library_online_application/screens/book-detail/book_detail_screen.dart';
 
 class BookByTags extends StatefulWidget {
   final Tag? tag;
@@ -177,7 +173,7 @@ class _BookByTagsState extends State<BookByTags> {
                             if (perLike.isNaN) {
                               perLikeToString = "-";
                             } else {
-                              perLikeToString = perLike.ceil().toString();
+                              perLikeToString = "${perLike.ceil()}%";
                             }
 
                             return Text(
@@ -245,8 +241,8 @@ class _BookByTagsState extends State<BookByTags> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              BookDetail(bookId: books[_index].id.toString())),
+                          builder: (context) => BookDetailScreen(
+                              bookId: books[_index].id.toString())),
                     );
                   },
                   child: Text(
@@ -259,7 +255,7 @@ class _BookByTagsState extends State<BookByTags> {
                   ),
                 ),
                 Text(
-                  books[_index].author ?? "-",
+                  books[_index].author ?? "No Author",
                   style: const TextStyle(
                       color: Color(0xFFA4A4A4),
                       fontSize: 12,

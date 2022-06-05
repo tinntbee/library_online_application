@@ -16,9 +16,9 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<BookcaseProvider>(
-            create: (_) => new BookcaseProvider()),
+            create: (_) => BookcaseProvider()),
         ChangeNotifierProvider<ReadingSpaceProvider>(
-            create: (_) => new ReadingSpaceProvider())
+            create: (_) => ReadingSpaceProvider())
       ],
       child: const MyApp(),
     ),
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "Poppins"),
       // home: const MyHomePage(),
       home: const AppIntro(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

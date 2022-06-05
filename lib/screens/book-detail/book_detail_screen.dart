@@ -1,74 +1,73 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/widgets.dart';
+import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
+import 'package:library_online_application/api/book_api.dart';
+import 'package:library_online_application/icons/bee_app_icons.dart';
+import 'package:library_online_application/models/book_detail.dart';
 import 'package:library_online_application/providers/bookcase_provider.dart';
-import 'package:library_online_application/screens/book-detail/widgets/book_forum.dart';
-import 'package:library_online_application/screens/book-detail/widgets/book_info.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:library_online_application/screens/book-detail/widgets/analyst_barl.dart';
+import 'package:library_online_application/screens/book-detail/widgets/forum_tab.dart';
+import 'package:library_online_application/screens/book-detail/widgets/information_tab.dart';
+import 'package:library_online_application/widgets/stateless/loading.dart';
 import 'package:library_online_application/widgets/stateless/notifycation_bar.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/book_api.dart';
-import '../../models/book.dart';
+class BookDetailScreen extends StatefulWidget {
+  final String bookId;
+  const BookDetailScreen({Key? key, required this.bookId}) : super(key: key);
 
-class BookDetail extends StatefulWidget {
-  final String? bookId;
-  BookDetail({Key? key, required this.bookId}) : super(key: key);
   @override
-  State<BookDetail> createState() => _BookDetailState();
+  State<BookDetailScreen> createState() => _BookDetailScreenState();
 }
 
-class _BookDetailState extends State<BookDetail>
-    with SingleTickerProviderStateMixin {
-  Book? bookDetail;
-  Future<void> detailBook(bookId) async {
-    Book book = await BookApi.detailBook(bookId);
-    setState(() {
-      bookDetail = book;
-    });
-  }
-
-  double _position = 0.0;
-
-  int _index = 0;
-  late TabController _tabController;
+class _BookDetailScreenState extends State<BookDetailScreen> {
+  bool _isLoading = true;
+  int _bookTabIndex = 0;
+  late BookDetail _bookDetail;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    detailBook(widget.bookId);
-    _tabController = TabController(length: 2, vsync: this);
+    getBookDetail();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
+  Future<void> getBookDetail() async {
+    setState(() {
+      _isLoading = true;
+    });
+    BookDetail book = await BookApi.getBookDetail(widget.bookId);
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      _bookDetail = book;
+      _isLoading = false;
+    });
   }
 
-  var tagId = "61b982ae3cd1052a8febe8fd";
-
-  Future<void> handleBuyBook(BuildContext context) async {
+  Future<void> handleBuyBook(BuildContext _context) async {
     print(widget.bookId ?? "");
-    int status = await Provider.of<BookcaseProvider>(context, listen: false)
+    int status = await Provider.of<BookcaseProvider>(_context, listen: false)
         .buyBookAndUpdate(widget.bookId ?? "");
     switch (status) {
       case 200:
-        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+        ScaffoldMessenger.of(_context).showSnackBar(NotificationSnackBar(
             "success", "Purchase success!", Color(0xFF27AE60)));
         break;
       case 210:
-        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+        ScaffoldMessenger.of(_context).showSnackBar(NotificationSnackBar(
             "warning", "Book is exit in bookcase!", Color(0xFFF9B700)));
         break;
       case 211:
-        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar("error",
-            "Purchase Fail! Not have enough flower", Color(0xFFEB5757)));
+        ScaffoldMessenger.of(_context).showSnackBar(NotificationSnackBar(
+            "error",
+            "Purchase Fail! Not have enough flower",
+            Color(0xFFEB5757)));
         break;
 
       default:
-        ScaffoldMessenger.of(context).showSnackBar(NotificationSnackBar(
+        ScaffoldMessenger.of(_context).showSnackBar(NotificationSnackBar(
             "warning", "Something wrong!", Color(0xFFF9B700)));
         break;
     }
@@ -78,337 +77,341 @@ class _BookDetailState extends State<BookDetail>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(100), // Set this height
-          child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            color: Color.fromRGBO(7, 116, 118, 1),
-            child: Column(
-              children: [
-                Spacer(),
-                Row(
-                  children: [
-                    const SizedBox(width: 150),
-                    Text(
-                      "Book Detail",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ],
+        appBar: AppBar(
+          backgroundColor: Color(0xFF027B76).withOpacity(0.5),
+          centerTitle: true,
+          title: const Text(
+            'Book Detail',
+            style: TextStyle(
+                color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          leading: IconButton(
+            padding: EdgeInsets.all(5),
+            iconSize: 24,
+            icon: const Icon(
+              BeeAppIcons.arrow_left,
+              color: Colors.white,
             ),
-          )),
-      body: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: AnimatedContainer(
-                    width: double.infinity,
-                    height: 2,
-                    color: Color(0xFF258F5A).withOpacity(0.1),
-                    child: FractionallySizedBox(
-                      heightFactor: 1,
-                      widthFactor: _position,
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: double.infinity,
-                        height: 2,
-                        color: Color(0xFF258F5A),
-                      ),
-                    ),
-                    duration: const Duration(seconds: 2),
-                    // Provide an optional curve to make the animation feel smoother.
-                    curve: Curves.fastOutSlowIn,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(2, 123, 118, 0.7),
-                        Color.fromRGBO(24, 95, 117, 0.7),
-                      ],
-                      begin: FractionalOffset(0.0, 0.0),
-                      end: FractionalOffset(0.0, 1.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-            ),
-
-            SizedBox(
-              height: 300,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image(
-                    alignment: Alignment.center,
-                    image: NetworkImage(bookDetail!.image ?? ""),
-                    fit: BoxFit.cover,
-                  ),
-                  ClipRRect(
-                    // Clip it cleanly.
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        color: Colors.grey.withOpacity(0.1),
-                        alignment: Alignment.center,
-                        child: Image(
-                          alignment: Alignment.center,
-                          image: NetworkImage(bookDetail!.image ?? ""),
-                          width: 200,
-                          height: 250,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 250,
-                    right: 75,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 250,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black,
-                                width: 0.1,
-                                style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey[100],
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              const Icon(
-                                Icons.thumb_up,
-                                color: Color.fromRGBO(249, 183, 0, 1),
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Builder(builder: (BuildContext context) {
-                                return Text(
-                                  bookDetail!.totalLike.toString(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF6D6D6D),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400),
-                                );
-                              }),
-                              const SizedBox(width: 10),
-                              const Icon(
-                                Icons.thumb_down,
-                                color: Colors.black,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Builder(builder: (BuildContext context) {
-                                return Text(
-                                  bookDetail!.totalDislike.toString(),
-                                  style: const TextStyle(
-                                      color: Color(0xFF6D6D6D),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400),
-                                );
-                              }),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.shopping_cart,
-                                      color: Color(0xFF6D6D6D),
-                                      size: 25,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      bookDetail!.totalRead.toString(),
-                                      style: const TextStyle(
-                                          color: Color(0xFF6D6D6D),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w400),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                      size: 25,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      bookDetail!.totalLike.toString(),
-                                      style: const TextStyle(
-                                          color: Color(0xFF6D6D6D),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w400),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          actions: [
+            IconButton(
+              padding: EdgeInsets.all(5),
+              iconSize: 24,
+              icon: const Icon(
+                BeeAppIcons.share,
+                color: Colors.white,
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const BookDetail()),
-              //   );
-              // },
-              child: Text(
-                bookDetail!.name.toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Color.fromRGBO(2, 123, 118, 1),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-            Text(
-              bookDetail!.author.toString(),
-              style: const TextStyle(
-                  color: Color(0xFFA4A4A4),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w300),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            // give the tab bar a height [can change hheight to preferred height]
-            Container(
-              height: 40,
-              width: 350,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(
-                  25.0,
-                ),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                // give the indicator a decoration (color and border radius)
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    25.0,
-                  ),
-                  color: Colors.green,
-                ),
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                tabs: [
-                  // first tab [you can add an icon using the icon property]
-                  Tab(
-                    text: 'Information',
-                  ),
-
-                  // second tab [you can add an icon using the icon property]
-                  Tab(
-                    text: 'Forum',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            // tab bar view here
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // first tab bar view widget
-                  BookInfor(),
-                  // second tab bar view widget
-                  // BookForum()
-                  BookInfor()
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-              child: GNav(
-                rippleColor: Colors.grey[300]!,
-                hoverColor: Colors.red!,
-                gap: 8,
-                activeColor: Colors.black,
-                iconSize: 24,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                duration: Duration(milliseconds: 400),
-                tabBackgroundColor: Colors.grey[100]!,
-                color: Colors.black,
-                tabs: [
-                  GButton(
-                    icon: LineIcons.heart,
-                    text: 'Like',
-                    hoverColor: Colors.red,
-                    iconActiveColor: Colors.red,
-                    textColor: Colors.redAccent,
-                  ),
-                  GButton(
-                    onPressed: () {
-                      handleBuyBook(context);
-                    },
-                    icon: LineIcons.userPlus,
-                    text: 'Add to Bookcase',
-                    hoverColor: Colors.yellow,
-                    iconActiveColor: Colors.white,
-                    backgroundColor: Colors.black87,
-                    textColor: Colors.white,
-                  ),
-                  GButton(
-                    icon: LineIcons.bookOpen,
-                    text: 'Read Now',
-                    backgroundColor: Colors.yellow,
-                  ),
-                ],
-              ),
-            ),
+              onPressed: () {},
+            )
           ],
         ),
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        body: ListView(
+          padding: EdgeInsets.only(top: 0),
+          children: _isLoading
+              ? [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Loading(),
+                  )
+                ]
+              : [
+                  thumbnailBook(),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Text(
+                          _bookDetail.name,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF027B76)),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(_bookDetail.author ?? "No Author",
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xFFA4A4A4)))
+                      ],
+                    ),
+                  ),
+                  bookTabs(),
+                  const SizedBox(
+                    height: 500,
+                  )
+                ],
+        ),
+        bottomNavigationBar:
+            _isLoading ? SizedBox() : bottomNavigator(context));
+  }
+
+  Widget thumbnailBook() {
+    return Container(
+        width: double.infinity,
+        height: 450,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(38),
+                      bottomRight: Radius.circular(38))),
+              clipBehavior: Clip.hardEdge,
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(_bookDetail.image),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
+                  child: Container(
+                    decoration:
+                        BoxDecoration(color: Colors.white.withOpacity(0.3)),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+                child: Container(
+              height: 237,
+              width: 163,
+              margin: EdgeInsets.only(top: 40),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0xFF000000).withOpacity(0.2),
+                        blurRadius: 8)
+                  ]),
+              clipBehavior: Clip.hardEdge,
+              child: Image.network(
+                _bookDetail.image,
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Center(
+                    child: FlutterLogo(
+                      size: 80,
+                    ),
+                  );
+                },
+              ),
+            )),
+            Positioned(
+                top: 420,
+                left: 0,
+                right: 0,
+                child: Container(
+                  alignment: Alignment.center,
+                  child: AnalystBar(book: _bookDetail),
+                )),
+            Positioned(
+              right: 10,
+              bottom: 30,
+              child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                      color: Color(0xFF000000).withOpacity(0.2),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  clipBehavior: Clip.hardEdge,
+                  child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                          onTap: () async {}, // Handle your onTap
+                          child: Ink(
+                            child: const Center(
+                                child: Icon(BeeAppIcons.intro,
+                                    size: 30, color: Colors.white)),
+                          )))),
+            )
+          ],
+        ));
+  }
+
+  Widget bookTabs() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                width: double.infinity,
+                height: 28,
+                decoration: BoxDecoration(
+                    color: Color(0xFFF2F2F2)
+                        .withOpacity(_bookTabIndex == 0 ? 1 : 0),
+                    borderRadius: BorderRadius.all(Radius.circular(14))),
+                alignment: Alignment.center,
+                clipBehavior: Clip.hardEdge,
+                child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _bookTabIndex = 0;
+                          });
+                        }, // Handle your onTap
+                        child: Ink(
+                          child: Center(
+                            child: Text(
+                              "Information",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF6D6D6D).withOpacity(
+                                      _bookTabIndex == 0 ? 1 : 0.5)),
+                            ),
+                          ),
+                        ))),
+              )),
+              Expanded(
+                  child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                width: double.infinity,
+                height: 28,
+                decoration: BoxDecoration(
+                    color: Color(0xFFF2F2F2)
+                        .withOpacity(_bookTabIndex == 1 ? 1 : 0),
+                    borderRadius: BorderRadius.all(Radius.circular(14))),
+                alignment: Alignment.center,
+                clipBehavior: Clip.hardEdge,
+                child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _bookTabIndex = 1;
+                          });
+                        }, // Handle your onTap
+                        child: Ink(
+                          child: Center(
+                            child: Text(
+                              "Forum",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF6D6D6D).withOpacity(
+                                      _bookTabIndex == 1 ? 1 : 0.5)),
+                            ),
+                          ),
+                        ))),
+              ))
+            ],
+          ),
+          IndexedStack(
+            index: _bookTabIndex,
+            children: [
+              InformationTab(
+                  tags: _bookDetail.tags ?? [],
+                  description: _bookDetail.description ?? ""),
+              ForumTab()
+            ],
+          )
+        ],
       ),
     );
-    //backgroundColor: Colors.white,
+  }
+
+  Widget bottomNavigator(BuildContext _context) {
+    return Container(
+      height: 64,
+      color: Colors.white,
+      padding: EdgeInsets.all(15),
+      child: Row(
+        children: [
+          Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                  color: Color(0xFFF9B700).withOpacity(0.1),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              clipBehavior: Clip.hardEdge,
+              child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                      onTap: () async {}, // Handle your onTap
+                      child: Ink(
+                        child: const Icon(
+                          BeeAppIcons.thumb_up,
+                          color: Color(0xFFF9B700),
+                        ),
+                      )))),
+          const SizedBox(
+            width: 15,
+          ),
+          Container(
+              decoration: BoxDecoration(
+                  color: Color(0xFF6D6D6D).withOpacity(0.1),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              clipBehavior: Clip.hardEdge,
+              child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                      onTap: () {
+                        handleBuyBook(_context);
+                      }, // Handle your onTap
+                      child: Ink(
+                        width: 162,
+                        child: const Center(
+                            child: Text("ADD TO BOOKSHELF",
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF6D6D6D)))),
+                      )))),
+          const SizedBox(
+            width: 15,
+          ),
+          Expanded(
+            child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                    color: Color(0xFFF9B700),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                clipBehavior: Clip.hardEdge,
+                child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                        onTap: () async {}, // Handle your onTap
+                        child: Ink(
+                          child: const Center(
+                              child: Text("READ NOW",
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white))),
+                        )))),
+          ),
+        ],
+      ),
+    );
   }
 }

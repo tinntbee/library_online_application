@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_online_application/icons/bee_app_icons.dart';
 import 'package:library_online_application/models/book.dart';
+import 'package:library_online_application/screens/book-detail/book_detail_screen.dart';
 
 class BookTrendingItem extends StatelessWidget {
   final int? index;
@@ -172,25 +173,42 @@ class BookTrendingItem extends StatelessWidget {
                         ),
                         SizedBox(
                           width: 80,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: const [
-                              Text(
-                                "View Detail",
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(7, 116, 118, 1)),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BookDetailScreen(
+                                            bookId: book.id,
+                                          )),
+                                );
+                              }, // Handle your onTap
+                              child: Ink(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: const [
+                                    Text(
+                                      "View Detail",
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                              Color.fromRGBO(7, 116, 118, 1)),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      BeeAppIcons.arrow_right,
+                                      color: Color.fromRGBO(7, 116, 118, 1),
+                                      size: 18,
+                                    )
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                BeeAppIcons.arrow_right,
-                                color: Color.fromRGBO(7, 116, 118, 1),
-                                size: 18,
-                              )
-                            ],
+                            ),
                           ),
                         )
                       ],

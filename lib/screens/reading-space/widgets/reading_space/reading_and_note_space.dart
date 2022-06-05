@@ -89,8 +89,8 @@ class _ReadingAndNoteSpaceState extends State<ReadingAndNoteSpace>
                   width: double.infinity,
                   height: double.infinity,
                   padding: EdgeInsets.only(top: 68),
-                  child: SfPdfViewer.asset(
-                    "assets/pdf/demo.pdf",
+                  child: SfPdfViewer.network(
+                    note.book.link ?? "",
                     key: _pdfViewerKey,
                     password: note.book.key,
                     canShowScrollHead: false,
@@ -132,7 +132,7 @@ class _ReadingAndNoteSpaceState extends State<ReadingAndNoteSpace>
                     )),
                 Positioned(top: 100, right: 4, child: countDown),
                 Positioned(top: 150, right: 4, child: Translator()),
-                NoteSpace()
+                NoteSpace(note: note)
               ],
             )),
       );

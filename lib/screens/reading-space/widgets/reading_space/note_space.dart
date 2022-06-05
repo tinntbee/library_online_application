@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:library_online_application/models/note.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../../icons/bee_app_icons.dart';
 
 class NoteSpace extends StatefulWidget {
-  const NoteSpace({Key? key}) : super(key: key);
+  final Note note;
+  const NoteSpace({Key? key, required this.note}) : super(key: key);
 
   @override
   State<NoteSpace> createState() => _NoteSpaceState();
 }
 
 class _NoteSpaceState extends State<NoteSpace> {
-  String initialText =
-      '<p><strong><span style="font-size: 30px;">Ghi Ch&uacute;<img src="https://firebasestorage.googleapis.com/v0/b/library-online-3ec9d.appspot.com/o/Notes%2FImages%2F1641442302459?alt=media&token=dcd5f82f-970a-4d9c-9d02-54885b16efcc" style="width: 496px;" class="fr-fic fr-dib"></span></strong></p><p><span style="font-size: 18px;">Khoảng th&aacute;ng 2&nbsp;năm 2003, t&ocirc;i đột nhi&ecirc;n được mời tới Ba Lan để quảng b&aacute;cho cuốn s&aacute;ch. <strong>Ở trạm dừng đầu ti&ecirc;n tại Warsaw, ph&iacute;a đối t&aacute;c đ&atilde; cử bốn vệ sĩmặc com-l&ecirc; với bộ đ&agrave;m cầm tay hệt như người của Sở Mật vụ để phụ tr&aacute;chvấn đề an to&agrave;n của t&ocirc;i. T&ocirc;i cười lớn, cho rằng điều n&agrave;y thật kỳ cục. Hiểnnhi&ecirc;n l&agrave; t&ocirc;i kh&ocirc;ng cần được bảo vệ.</strong></span></p>';
   String result = '';
   final HtmlEditorController _controller = HtmlEditorController();
   @override
@@ -57,7 +57,7 @@ class _NoteSpaceState extends State<NoteSpace> {
                       htmlEditorOptions: HtmlEditorOptions(
                         hint: 'Your text here...',
                         shouldEnsureVisible: true,
-                        initialText: initialText,
+                        initialText: widget.note.content,
                       ),
                       htmlToolbarOptions: HtmlToolbarOptions(
                         toolbarPosition:
